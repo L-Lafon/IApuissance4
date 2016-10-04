@@ -7,21 +7,27 @@ class noyau(object):
         
     def reset(self):
         self.board=[[0 for i in range(7)]for j in range(6)]
-        self.fullCol=False
         self.gg=False
         self.end=False
-
-    def placer(self,col=0,joueur=1,board): #A REFAIRE
-        if self.board[0][col]!=0:
+        
+    def placer(self,col,joueur,board,show=None): #A REFAIRE
+        """col>=0 and col>=6, joueur==1 or joueur==2, board is matrice(7x6)"""
+        #tests parametres
+        assert (col>=0 and col<=6), 'col>=0 and col>=6'
+        assert (joueur==1 or joueur==2), 'joueur==1 or joueur==2'
+        assert len(board[0])==7 and len(board)==6, 'board is matrice(7x6)'
+        
+        if board[0][col]!=0: #pas besoin de parcourir le tableau
             print("Colonne pleine !")
-            self.fullCol = True
         else :
             for i in range(6):
-                if i>0 and self.board[i-1][col]==0 and self.board[i][col]!=0 :
-                    self.board[i-1][col] = joueur
-                if self.board[i][col]==0 and i==5: self.board[i][col] = joueur
-                        
-        
+                if i>0 and board[i-1][col]==0 and board[i][col]!=0 :
+                    board[i-1][col] = joueur
+                if board[i][col]==0 and i==5: board[i][col] = joueur
+                
+        if show!=None: #montrer le plateau de facon ethetique
+            self.show(board)
+        return board
 
     def isAlign(self):
         #parcours colonne
@@ -64,9 +70,13 @@ class noyau(object):
         _=0
         for i in range(7):
             if self.board[0][i]!=0: _+=1
-        if _==7 or self.gg==True:
+        if _==7 or self.gg==True: #si toutes les colonnes sont empty ou si qqun a gagné
             self.end=True
             print('THE END')
+
+    def play(self,joueur):
+        assert (joueur==1 or joueur==2), 'joueur==1 or joueur==2'
+        
 
     # ----------------------------------------------------------------------------
     def show(self,mat):
