@@ -35,7 +35,6 @@ public class Board {
 		this.pions[l][c] = null;
 	}
 	
-	
 	public boolean isColumnFull(int col){
 		return this.pions[this.pions.length -1][col] != null;
 	}
