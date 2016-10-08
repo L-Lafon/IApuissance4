@@ -19,10 +19,12 @@ public class Board {
 				this.pions[i][j]=null;
 	}
 	
-	public void add(int c, Pion p){
+	// Retour l'id de la ligne où le jeton a été déposé
+	public int add(int c, Pion p){
 		int l;
 		for(l=0; l<this.nbLines && !isCaseFree(l,c); l++);
 		this.add(l,c, p);
+		return l;
 	}
 	
 	
@@ -46,9 +48,73 @@ public class Board {
 		return false;
 	}
 	
-	public int existsAlignment(){
+	public boolean existsAlignment(Position p){
 		
-		return 0;
+		
+		int currPlayer = this.pions[p.getRow()][p.getCol()].getPlayer();
+		
+		
+		// Détection verticale
+		if(p.getRow() >= 3){
+			int nb=3;
+			for(int i=1; i<=3;i++){
+				if(this.pions[p.getRow()-i][p.getCol()].getPlayer() == currPlayer)
+					nb--;					
+				else
+					break;
+			}
+			
+			if(nb == 0)
+				return true;			
+			
+		}	
+		
+		// Détection horizontale
+		int nb=3;
+		
+		for(int i=1; i<=3;i++){
+			if(p.getCol()-i >= 0 && !this.isCaseFree(p.getRow(), p.getCol()-i)  && this.pions[p.getRow()][p.getCol()-i].getPlayer() == currPlayer)
+				nb--;
+			else
+				break;
+		}
+		
+		for(int i=1; i<=3;i++){
+			if(p.getCol()+i < nbColumns && !this.isCaseFree(p.getRow(), p.getCol()+i) && this.pions[p.getRow()][p.getCol()+i].getPlayer() == currPlayer)
+				nb--;
+			else
+				break;
+		}
+		
+		if(nb == 0)
+			return true;	
+		
+		// Détection diagonale bas gauche
+		
+		nb=3;
+		
+		for(int i=1; i<=3;i++){
+			if(p.getRow()-i >= 0 && p.getCol()-i >= 0 && !this.isCaseFree(p.getRow()-i, p.getCol()-i) && this.pions[p.getRow()-i][p.getCol()-i].getPlayer() == currPlayer)
+				nb--;
+			else
+				break;
+		}
+		
+		// Détection diagonale haut droite
+		
+		for(int i=1; i<=3;i++){
+			if(p.getRow()+i < nbLines && p.getCol()+i < nbColumns && !this.isCaseFree(p.getRow()+i, p.getCol()+i) && this.pions[p.getRow()+i][p.getCol()+i].getPlayer() == currPlayer)
+				nb--;
+			else
+				break;
+		}
+		
+		if(nb == 0)
+			return true;	
+		
+		
+		
+		return false;
 	}
 	
 	
