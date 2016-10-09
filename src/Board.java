@@ -2,14 +2,26 @@
 
 public class Board {
 	
+	final static int NB_LINES = 6;
+	final static int NB_COLUMNS = 7;
+	
 	Pion[][] pions;
-	int nbColumns = 7;
-	int nbLines = 6;;
+	int nbLines,nbColumns;
+	
 	
 	/** Initialisation du plateau
 	 * pion[i][j] = null (aucun pion dans la case)
 	 */
+	
 	public Board(){
+		// valeurs par défaut utilisées si pas précisés
+		this(Board.NB_LINES,Board.NB_COLUMNS);
+		
+	}
+	public Board(int row, int col){
+		
+		this.nbLines = row;
+		this.nbColumns = col;		
 		
 		pions = new Pion[nbLines][nbColumns];
 		
@@ -50,52 +62,58 @@ public class Board {
 	
 	public boolean existsAlignment(Position p){
 		
+		int pos_row = p.getRow();
+		int pos_col = p.getCol();
+		int currPlayer = this.pions[pos_row][pos_col].getPlayer();
 		
-		int currPlayer = this.pions[p.getRow()][p.getCol()].getPlayer();
+		int aligned;
+		
 		
 		
 		// Détection verticale
-		if(p.getRow() >= 3){
-			int nb=3;
+		
+		aligned = 1;
+		if(p.getRow() >= 4){			
+			
 			for(int i=1; i<=3;i++){
-				if(this.pions[p.getRow()-i][p.getCol()].getPlayer() == currPlayer)
-					nb--;					
+				if(this.pions[pos_row-i][pos_col].getPlayer() == currPlayer)
+					aligned++;					
 				else
 					break;
 			}
 			
-			if(nb == 0)
+			if(aligned == 4)
 				return true;			
 			
 		}	
 		
 		// Détection horizontale
-		int nb=3;
+		aligned = 1;
 		
 		for(int i=1; i<=3;i++){
-			if(p.getCol()-i >= 0 && !this.isCaseFree(p.getRow(), p.getCol()-i)  && this.pions[p.getRow()][p.getCol()-i].getPlayer() == currPlayer)
-				nb--;
+			if(pos_col-i >= 0 && !this.isCaseFree(pos_row, pos_col-i)  && this.pions[pos_row][pos_col-i].getPlayer() == currPlayer)
+				aligned++;
 			else
 				break;
 		}
 		
 		for(int i=1; i<=3;i++){
-			if(p.getCol()+i < nbColumns && !this.isCaseFree(p.getRow(), p.getCol()+i) && this.pions[p.getRow()][p.getCol()+i].getPlayer() == currPlayer)
-				nb--;
+			if(pos_col+i < nbColumns && !this.isCaseFree(pos_row, pos_col+i) && this.pions[pos_row][pos_col+i].getPlayer() == currPlayer)
+				aligned++;
 			else
 				break;
 		}
 		
-		if(nb == 0)
+		if(aligned == 4)
 			return true;	
 		
 		// Détection diagonale bas gauche
 		
-		nb=3;
+		aligned = 1;
 		
 		for(int i=1; i<=3;i++){
-			if(p.getRow()-i >= 0 && p.getCol()-i >= 0 && !this.isCaseFree(p.getRow()-i, p.getCol()-i) && this.pions[p.getRow()-i][p.getCol()-i].getPlayer() == currPlayer)
-				nb--;
+			if(pos_row-i >= 0 && pos_col-i >= 0 && !this.isCaseFree(pos_row-i, pos_col-i) && this.pions[pos_row-i][pos_col-i].getPlayer() == currPlayer)
+				aligned++;
 			else
 				break;
 		}
@@ -103,15 +121,14 @@ public class Board {
 		// Détection diagonale haut droite
 		
 		for(int i=1; i<=3;i++){
-			if(p.getRow()+i < nbLines && p.getCol()+i < nbColumns && !this.isCaseFree(p.getRow()+i, p.getCol()+i) && this.pions[p.getRow()+i][p.getCol()+i].getPlayer() == currPlayer)
-				nb--;
+			if(pos_row+i < nbLines && pos_col+i < nbColumns && !this.isCaseFree(pos_row+i, pos_col+i) && this.pions[pos_row+i][pos_col+i].getPlayer() == currPlayer)
+				aligned++;
 			else
 				break;
 		}
 		
-		if(nb == 0)
-			return true;	
-		
+		if(aligned == 4)
+			return true;		
 		
 		
 		return false;
