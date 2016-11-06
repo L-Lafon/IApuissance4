@@ -1,4 +1,4 @@
-package ihm;
+package controller;
 
 import java.util.Scanner;
 
@@ -14,14 +14,16 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import model.Chip;
 import model.Game;
-import controller.Motor;
+import model.Grid;
+import model.Position;
+import view.WindowGame;
 
 public class Puissance4 extends Application{
 	
 	private Stage stage;
-	public Motor motor;
-	
+		
 	public Game game;
 	
 	public WindowGame windowGame;
@@ -53,17 +55,12 @@ public class Puissance4 extends Application{
 		game = new Game();
 		System.out.println("VU!");
 		
-		// Déclaration du moteur
-		motor = new Motor(this);
-
-		// Déclaration des fenêtres
-		
-		
+		// Déclaration des fenêtres		
 		
 		windowGame = new WindowGame(this);	
 		
 		
-		motor.initGame();
+		this.initGame();
 		
 		
 		// Par défaut : fenêre de la partie affichée
@@ -90,7 +87,7 @@ public class Puissance4 extends Application{
 		
 		sc.close();*/
 		
-		motor.updateView();
+		this.updateView();
 		
 	}
 	
@@ -101,6 +98,54 @@ public class Puissance4 extends Application{
 	
 	public Stage getStage(){
 		return this.stage;
+	}
+	
+	public void initGame(){
+		this.fixPlayer(0);
+		game.setWinner(null);
+	}
+	
+	public void insertChip(int column){
+		Grid grid = game.getGrid();
+		int line;
+		
+		if(!game.gameOver() && !grid.isColumnFull(column)){
+			line = grid.add(column, new Chip(game.getCurrentPlayer()));
+		
+			// Vérification si pions alignés par rapport au dernier pion déposé
+			//int winner;
+			if((grid.existsAlignment(new Position(line,column))) != false){
+				//this.winner=this.pions[line][column].getPlayer();
+				game.setWinner(game.getCurrentPlayer());
+				windowGame.setIndication("Victoire de "+game.getCurrentPlayer().getName()+"");
+				System.out.println("Victoire de "+game.getWinner());
+			}
+			else{
+			
+				this.switchPlayer();
+			
+			}
+			
+			
+			this.updateView();
+			game.grid.showDebug();
+		
+		}
+	}
+	
+	public void fixPlayer(int index){
+		game.setIndexCurrentPlayer( index  );	
+		windowGame.setIndication("Au tour de "+game.getCurrentPlayer().getName()+"");
+	}
+	
+	public void switchPlayer(){		
+		this.fixPlayer(   (game.getIndexCurrentPlayer() == 0) ? 1 : 0   );		
+	}
+	
+	public void updateView(){
+		Grid grid = game.getGrid();
+		System.out.println("Mise à jour de la vue demandée par le moteur");
+		windowGame.update(grid.getDataView(),grid.nbLines, grid.nbColumns);
 	}
 	
 	

@@ -1,4 +1,4 @@
-package ihm;
+package view;
 
 import javafx.scene.Parent;
 import javafx.scene.paint.Color;

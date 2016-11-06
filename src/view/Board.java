@@ -1,4 +1,4 @@
-package ihm;
+package view;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

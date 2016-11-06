@@ -1,7 +1,8 @@
-package ihm;
+package view;
 
 import java.io.IOException;
 
+import controller.Puissance4;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -89,7 +90,7 @@ public class WindowGame extends Scene  {
 	
 	 
 	@FXML
-	 private Label indication;
+	private Label indication;
 	 
 	public void setIndication(String text){
 		System.out.println("indication : "+text);
@@ -97,7 +98,7 @@ public class WindowGame extends Scene  {
 	}
 	
 	public void selectColumnAction(int c){
-		this.getApp().motor.insertChip(c);
+		this.getApp().insertChip(c);
 	}
 
 }
