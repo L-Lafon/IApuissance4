@@ -1,40 +1,61 @@
+package model;
 
+import javafx.scene.paint.Color;
 
-public class Board {
+public class Grid {
 	
 	final static int NB_LINES = 6;
 	final static int NB_COLUMNS = 7;
 	
-	Pion[][] pions;
-	int nbLines,nbColumns;
+	Chip[][] chips;
+	public int nbLines,nbColumns;
 	
 	
 	/** Initialisation du plateau
 	 * pion[i][j] = null (aucun pion dans la case)
 	 */
 	
-	public Board(){
+	public Grid(){
 		// valeurs par défaut utilisées si pas précisés
-		this(Board.NB_LINES,Board.NB_COLUMNS);
+		this(Grid.NB_LINES,Grid.NB_COLUMNS);
 		
 	}
-	public Board(int row, int col){
+	public Grid(int row, int col){
 		
 		this.nbLines = row;
 		this.nbColumns = col;		
 		
-		pions = new Pion[nbLines][nbColumns];
+		chips = new Chip[nbLines][nbColumns];
 		
 		int i,j;
 		for(i=0; i<this.nbLines;i++)
 			for(j=0;j<this.nbColumns; j++)
-				this.pions[i][j]=null;
+				this.chips[i][j]=null;
+	}
+	
+	public Chip[][] getData(){
+		return this.chips;
+	}
+	
+	public Color[][] getDataView(){
+		Color[][] dataView = new Color[this.nbLines][this.nbColumns];
+		
+		for(int i=0; i<this.nbLines;i++){
+			for(int j=0;j<this.nbColumns; j++){
+				if(this.chips[i][j] == null)
+					dataView[i][j] = null;
+				else
+					dataView[i][j] = this.chips[i][j].getPlayer().getColor();
+			}
+		}
+		return dataView;
 	}
 	
 	// Retour l'id de la ligne où le jeton a été déposé
-	public int add(int c, Pion p){
+	public int add(int c, Chip p){
 		int l;
 		for(l=0; l<this.nbLines && !isCaseFree(l,c); l++);
+		System.out.println("Ajout en ligne num "+l);
 		this.add(l,c, p);
 		return l;
 	}
@@ -42,21 +63,21 @@ public class Board {
 	
 	
 	// Pour l'ia plus tard
-	public void add(int l, int c, Pion p){
-		this.pions[l][c] = p;
+	public void add(int l, int c, Chip p){
+		this.chips[l][c] = p;
 	}
 	public void remove(int l, int c){
-		this.pions[l][c] = null;
+		this.chips[l][c] = null;
 	}
 	
 	public boolean isColumnFull(int col){
-		return this.pions[this.pions.length -1][col] != null;
+		return this.chips[this.chips.length -1][col] != null;
 	}
 	
 	public boolean isCaseFree(int l, int c){
 		//System.out.println("L="+l+"C="+c);
 		if(l>= 0 && l < nbLines && c >= 0 && c < nbColumns)
-			return this.pions[l][c] == null;
+			return this.chips[l][c] == null;
 		return false;
 	}
 	
@@ -64,7 +85,7 @@ public class Board {
 		
 		int pos_row = p.getRow();
 		int pos_col = p.getCol();
-		int currPlayer = this.pions[pos_row][pos_col].getPlayer();
+		Player currPlayer = this.chips[pos_row][pos_col].getPlayer();
 		
 		int aligned;
 		
@@ -73,10 +94,10 @@ public class Board {
 		// Détection verticale
 		
 		aligned = 1;
-		if(p.getRow() >= 4){			
+		if(p.getRow()+1 >= 4){			
 			
 			for(int i=1; i<=3;i++){
-				if(this.pions[pos_row-i][pos_col].getPlayer() == currPlayer)
+				if(this.chips[pos_row-i][pos_col].getPlayer() == currPlayer)
 					aligned++;					
 				else
 					break;
@@ -91,14 +112,14 @@ public class Board {
 		aligned = 1;
 		
 		for(int i=1; i<=3;i++){
-			if(pos_col-i >= 0 && !this.isCaseFree(pos_row, pos_col-i)  && this.pions[pos_row][pos_col-i].getPlayer() == currPlayer)
+			if(pos_col-i >= 0 && !this.isCaseFree(pos_row, pos_col-i)  && this.chips[pos_row][pos_col-i].getPlayer() == currPlayer)
 				aligned++;
 			else
 				break;
 		}
 		
 		for(int i=1; i<=3;i++){
-			if(pos_col+i < nbColumns && !this.isCaseFree(pos_row, pos_col+i) && this.pions[pos_row][pos_col+i].getPlayer() == currPlayer)
+			if(pos_col+i < nbColumns && !this.isCaseFree(pos_row, pos_col+i) && this.chips[pos_row][pos_col+i].getPlayer() == currPlayer)
 				aligned++;
 			else
 				break;
@@ -112,7 +133,7 @@ public class Board {
 		aligned = 1;
 		
 		for(int i=1; i<=3;i++){
-			if(pos_row-i >= 0 && pos_col-i >= 0 && !this.isCaseFree(pos_row-i, pos_col-i) && this.pions[pos_row-i][pos_col-i].getPlayer() == currPlayer)
+			if(pos_row-i >= 0 && pos_col-i >= 0 && !this.isCaseFree(pos_row-i, pos_col-i) && this.chips[pos_row-i][pos_col-i].getPlayer() == currPlayer)
 				aligned++;
 			else
 				break;
@@ -121,7 +142,7 @@ public class Board {
 		// Détection diagonale haut droite
 		
 		for(int i=1; i<=3;i++){
-			if(pos_row+i < nbLines && pos_col+i < nbColumns && !this.isCaseFree(pos_row+i, pos_col+i) && this.pions[pos_row+i][pos_col+i].getPlayer() == currPlayer)
+			if(pos_row+i < nbLines && pos_col+i < nbColumns && !this.isCaseFree(pos_row+i, pos_col+i) && this.chips[pos_row+i][pos_col+i].getPlayer() == currPlayer)
 				aligned++;
 			else
 				break;
@@ -143,9 +164,9 @@ public class Board {
 		for(i=nbLines-1; i>=0; i--){
 			for(j=0; j<nbColumns; j++){
 				if(!this.isCaseFree(i, j)){
-					if(this.pions[i][j].getPlayer() == 1)
+					if(this.chips[i][j].getPlayer().getId() == 1)
 						player = "X";
-					else if(this.pions[i][j].getPlayer() == 2)
+					else if(this.chips[i][j].getPlayer().getId() == 2)
 						player = "O";
 				}
 				else
@@ -157,7 +178,7 @@ public class Board {
 			System.out.printf("\n");
 		}
 		/*String col_sep = "|";
-		String row_sep = "\n%s+\n"%("+-----"*this.pions[0].length);
+		String row_sep = "\n%s+\n"%("+-----"*this.chips[0].length);
 		String s= row_sep;
         for i in range(len(mat)):
             s+=col_sep
