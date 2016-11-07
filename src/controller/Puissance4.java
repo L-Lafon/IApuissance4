@@ -5,6 +5,8 @@ import java.util.Scanner;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import ia.IA;
+import ia.IARandom;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -17,6 +19,7 @@ import javafx.stage.Stage;
 import model.Chip;
 import model.Game;
 import model.Grid;
+import model.Player;
 import model.Position;
 import view.WindowGame;
 
@@ -129,6 +132,8 @@ public class Puissance4 extends Application{
 			
 			this.updateView();
 			game.grid.showDebug();
+			
+			this.nextRound();
 		
 		}
 	}
@@ -140,6 +145,26 @@ public class Puissance4 extends Application{
 	
 	public void switchPlayer(){		
 		this.fixPlayer(   (game.getIndexCurrentPlayer() == 0) ? 1 : 0   );		
+	}
+	
+	public void nextRound(){
+		
+		if(game.getCurrentPlayer().isIA()){
+			this.playIA();
+		}
+	}
+	
+	public void playIA(){
+		Player curPlayer = game.getCurrentPlayer();
+		Position p = null;;
+		if(game.getCurrentPlayer().getTypeIA() == IA.IA_RANDOM){
+			IARandom ia;
+			ia = (IARandom) new IARandom(game.getGrid());	
+			p = ia.play();
+		}
+		
+		if(p != null)		
+			insertChip(p.getCol());
 	}
 	
 	public void updateView(){

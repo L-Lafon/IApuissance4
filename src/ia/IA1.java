@@ -1,16 +1,13 @@
-package model;
+package ia;
 
-public class IA {
+import model.Chip;
+import model.Grid;
+import model.Player;
+
+public class IA1 extends IA{
 	
-	/*Game game;
-	Board grid;
-	
-	private Player playerIA, playerOpponent;
-	
-	IA(Board grid, Player pIA, Player pOpp){
-		this.grid = grid;
-		this.playerIA = pIA;
-		this.playerOpponent = pOpp;
+	public IA1(Grid grid, Player pIA, Player pOpp){
+		super(grid);
 	}
 	
 	public void play(){
@@ -21,10 +18,10 @@ public class IA {
 		int i;
 		int line;
 		
-		for(i=0; i<Board.NB_COLUMNS; i++){
+		for(i=0; i<grid.nbColumns; i++){
 			if(!grid.isColumnFull(i)){
 				// Simulation du coup
-				line = grid.add(i, new Pion(game.getCurrentPlayer()));
+				line = grid.add(i, new Chip(this.playerIA));
 				val = this.min(grid,2);
 				
 				if(val > val_max){
@@ -39,7 +36,7 @@ public class IA {
 		}
 	}
 	
-	public int min(Board currentGrid, int depth){
+	public int min(Grid currentGrid, int depth){
 		if(depth == 0 )// || FIN JEU)
 			return this.eval(currentGrid);
 		
@@ -48,11 +45,11 @@ public class IA {
 		int i;
 		int line;
 		
-		for(i=0; i<Board.NB_COLUMNS; i++){
+		for(i=0; i<grid.nbColumns; i++){
 			if(!currentGrid.isColumnFull(i)){
 				// Simulation du coup
-				line = currentGrid.add(i, new Pion(game.getCurrentPlayer()));
-				val = this.max(game.board,depth-1);
+				line = currentGrid.add(i, new Chip(playerOpponent));
+				val = this.max(currentGrid,depth-1);
 				
 				if(val < val_min){
 					val_min = val;					
@@ -69,7 +66,7 @@ public class IA {
 		
 	}
 	
-	public int max(Board currentGrid, int depth){
+	public int max(Grid currentGrid, int depth){
 		if(depth == 0) // FIN JEU)
 			return this.eval(currentGrid);
 		
@@ -78,11 +75,11 @@ public class IA {
 		int i;
 		int line;
 		
-		for(i=0; i<Board.NB_COLUMNS; i++){
+		for(i=0; i<grid.nbColumns; i++){
 			if(!currentGrid.isColumnFull(i)){
 				// Simulation du coup
-				line = currentGrid.add(i, new Pion(game.getCurrentPlayer()));
-				val = this.min(game.board,depth-1);
+				line = currentGrid.add(i, new Chip(this.playerIA));
+				val = this.min(currentGrid,depth-1);
 				
 				if(val > val_max){
 					val_max = val;					
@@ -99,10 +96,8 @@ public class IA {
 		
 	}
 	
-	public int eval(Board currentGrid, Player currentPlayer){
+	public int eval(Grid currentGrid, Player currentPlayer){
 		return 1;
 	}
 
-*/
 }
-

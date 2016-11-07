@@ -28,7 +28,7 @@ public class Chip extends Circle{
 		//System.out.println( "chip="+ this.getBoundsInParent().getHeight()  );
         this.setCenterX(0);
         this.setCenterY(0);
-        this.setRadius( board.getWidth() * 0.035);
+        this.setRadius( 30 * board.getWidth() / 800 );
         
         this.setTranslateX(0);//on positionne le groupe plutôt que le rectangle
         this.setTranslateY(0);

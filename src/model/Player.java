@@ -7,13 +7,13 @@ public class Player {
 	private int id;
 	private Color color;
 	private String name;
-	private boolean ia;
+	private int ia;
 	
 	Player(int i,Color c, String n){
 		id = i;
 		color = c;
 		name = n;
-		ia=false;
+		ia=0;
 	}
 	public int getId(){
 		return id;
@@ -26,8 +26,16 @@ public class Player {
 		return name;
 	}
 	
-	public void setIA(boolean bool){
-		this.ia = bool;
+	public void setIA(int ia){
+		this.ia = ia;
+	}
+	
+	public boolean isIA(){
+		return this.ia > 0;
+	}
+	
+	public int getTypeIA(){
+		return this.ia;
 	}
 	
 	
