@@ -64,8 +64,8 @@ public class Board extends AnchorPane{
 		board_background.setWidth(win_width);
 		board_background.setHeight(win_height);
 		
-		board_background.setArcWidth(30);
-		board_background.setArcHeight(30);
+		//board_background.setArcWidth(30);
+		//board_background.setArcHeight(30);
 		board_background.setFill(degrade("#B5DBFF","#004593"));
 		
 		
