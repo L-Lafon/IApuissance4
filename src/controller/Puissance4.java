@@ -6,6 +6,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import ia.IA;
+import ia.IA1;
 import ia.IARandom;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -56,7 +57,7 @@ public class Puissance4 extends Application{
 		
 		//...
 		game = new Game();
-		System.out.println("VU!");
+		
 		
 		// Déclaration des fenêtres		
 		
@@ -106,6 +107,9 @@ public class Puissance4 extends Application{
 	public void initGame(){
 		this.fixPlayer(0);
 		game.setWinner(null);
+		
+		// Si c'est à l'IA de jouer, elle va jouer, sinon rien faire
+		playIA();
 	}
 	
 	public void insertChip(int column){
@@ -113,15 +117,17 @@ public class Puissance4 extends Application{
 		int line;
 		
 		if(!game.gameOver() && !grid.isColumnFull(column)){
+			
 			line = grid.add(column, new Chip(game.getCurrentPlayer()));
 		
 			// Vérification si pions alignés par rapport au dernier pion déposé
 			//int winner;
-			if((grid.existsAlignment(new Position(line,column))) != false){
+			if((grid.existsAlignment(new Position(line,column),game.getCurrentPlayer()))){
 				//this.winner=this.pions[line][column].getPlayer();
 				game.setWinner(game.getCurrentPlayer());
 				windowGame.setIndication("Victoire de "+game.getCurrentPlayer().getName()+"");
 				System.out.println("Victoire de "+game.getWinner());
+				
 			}
 			else{
 			
@@ -131,7 +137,14 @@ public class Puissance4 extends Application{
 			
 			
 			this.updateView();
-			game.grid.showDebug();
+			/*game.grid.showDebug();
+			try{
+				Thread.sleep(500);
+			}
+			catch(Exception e){
+				
+			}*/
+			
 			
 			this.nextRound();
 		
@@ -149,7 +162,7 @@ public class Puissance4 extends Application{
 	
 	public void nextRound(){
 		
-		if(game.getCurrentPlayer().isIA()){
+		if(game.getCurrentPlayer().isIA() && !game.gameOver()){
 			this.playIA();
 		}
 	}
@@ -157,19 +170,30 @@ public class Puissance4 extends Application{
 	public void playIA(){
 		Player curPlayer = game.getCurrentPlayer();
 		Position p = null;;
+		
+		Player playerIA = game.getCurrentPlayer();
+		//PlayerOpponent = 
 		if(game.getCurrentPlayer().getTypeIA() == IA.IA_RANDOM){
 			IARandom ia;
 			ia = (IARandom) new IARandom(game.getGrid());	
 			p = ia.play();
 		}
+		if(game.getCurrentPlayer().getTypeIA() == IA.IA_2){
+			IA1 ia;
+			
+			ia = (IA1) new IA1(game.getGrid(), game.getCurrentPlayer(), game.getOpponentPlayer());	
+			p = ia.play();
+		}
 		
 		if(p != null)		
 			insertChip(p.getCol());
+		else
+			System.out.println("IA NE SAIT PLUS QUOI FAIRE");
 	}
 	
 	public void updateView(){
 		Grid grid = game.getGrid();
-		System.out.println("Mise à jour de la vue demandée par le moteur");
+		//System.out.println("Mise à jour de la vue demandée par le moteur");
 		windowGame.update(grid.getDataView(),grid.nbLines, grid.nbColumns);
 	}
 	

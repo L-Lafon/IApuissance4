@@ -85,7 +85,7 @@ public class WindowGame extends Scene  {
 		System.out.println(lines+"-"+columns);
 		board.update(data,lines,columns);	
 		
-		System.out.println("Mise à jour de la vue effectuée");
+		//System.out.println("Mise à jour de la vue effectuée");
 	}
 	
 	 
@@ -93,7 +93,7 @@ public class WindowGame extends Scene  {
 	private Label indication;
 	 
 	public void setIndication(String text){
-		System.out.println("indication : "+text);
+		//System.out.println("indication : "+text);
 		this.indication.setText(text);
 	}
 	

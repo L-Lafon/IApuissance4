@@ -4,8 +4,8 @@ import javafx.scene.paint.Color;
 
 public class Grid {
 	
-	final static int NB_LINES = 6;
-	final static int NB_COLUMNS = 7;
+	final static int NB_LINES = 4;
+	final static int NB_COLUMNS = 5;
 	
 	Chip[][] chips;
 	public int nbLines,nbColumns;
@@ -37,6 +37,10 @@ public class Grid {
 		return this.chips;
 	}
 	
+	public Chip getCase(Position p){
+		return this.chips[p.getRow()][p.getCol()];
+	}
+	
 	public Color[][] getDataView(){
 		Color[][] dataView = new Color[this.nbLines][this.nbColumns];
 		
@@ -55,7 +59,7 @@ public class Grid {
 	public int add(int c, Chip p){
 		int l;
 		for(l=0; l<this.nbLines && !isCaseFree(l,c); l++);
-		System.out.println("Ajout en ligne num "+l);
+		//System.out.println("Ajout en colonne "+c+" et ligne num "+l);
 		this.add(l,c, p);
 		return l;
 	}
@@ -81,15 +85,48 @@ public class Grid {
 		return false;
 	}
 	
-	public boolean existsAlignment(Position p){
+	public boolean isFull(){
+
 		
-		int pos_row = p.getRow();
+		for(int j=0;j<this.nbColumns; j++){
+			if(this.chips[this.nbLines-1][j] == null )
+				return false;
+		}
+		
+		return true;
+		
+		
+	}
+	
+	public boolean existsAlignment(Position p, Player player){
+		
+		
+		
+		
+		if(verticalAlignment(p,player).aligned >= 4){
+			System.out.println("Alignement vertical");
+			return true;
+		}
+		
+		if(horizontalAlignment(p,player).aligned >= 4){
+			System.out.println("Alignement horizontal");
+			return true;
+		}
+		
+		if(diagonalAlignment(p,player).aligned >= 4){
+			System.out.println("Alignement diagonal");
+			return true;
+		}
+			
+		
+		return false;
+		
+		/*
+		 int pos_row = p.getRow();
 		int pos_col = p.getCol();
 		Player currPlayer = this.chips[pos_row][pos_col].getPlayer();
 		
 		int aligned;
-		
-		
 		
 		// Détection verticale
 		
@@ -153,6 +190,151 @@ public class Grid {
 		
 		
 		return false;
+		
+		*/
+	}
+	
+	int nbAlignmentForWinning = 4;
+	
+	public QualityMove verticalAlignment(Position p, Player player){
+		
+		QualityMove qm = new QualityMove();
+		
+		int pos_row = p.getRow();
+		int pos_col = p.getCol();
+		
+		for(int i=0; i<nbLines ;i++){
+			
+			Chip currentChip = this.chips[i][pos_col];
+			
+			if(isCaseFree(i,pos_col)){
+				qm.incFree();
+			}			
+			else if(!isCaseFree(i,pos_col) && currentChip.getPlayer() != player){
+				qm.incChipOppPlayer();
+			}
+			else{				
+				qm.incChipCurPlayer();
+			}	
+			
+			
+			
+		}
+		
+		qm.end();
+		//if(pos_col == 2)
+			//this.showDebug();
+		//System.out.println("Test align vertical - "+p+" - "+player.getId()+" : "+qm);
+		
+		return qm;		
+		
+	}
+	
+	public QualityMove horizontalAlignment(Position p, Player player){
+		
+		
+		QualityMove qm = new QualityMove();
+		
+		int pos_row = p.getRow();
+		int pos_col = p.getCol();
+		
+		
+		for(int i=0; i<nbColumns ;i++){
+			
+			Chip currentChip = this.chips[pos_row][i];
+			
+			if(isCaseFree(pos_row,i)){
+				qm.incFree();
+			}			
+			else if(!isCaseFree(pos_row,i) && currentChip.getPlayer() != player){
+				qm.incChipOppPlayer();
+			}
+			else{				
+				qm.incChipCurPlayer();
+			}	
+			
+		}
+		
+		qm.end();
+		
+		
+			
+		//System.out.println("Test align horizontal - "+p+" - "+player.getId()+" : "+qm);	
+			
+			
+		return qm;		
+	}
+	
+	public QualityMove diagonalAlignment(Position p, Player player){
+		
+		Position posStart;
+		QualityMove qm = new QualityMove();
+		
+		int pos_row = p.getRow();
+		int pos_col = p.getCol();
+		
+		
+		// Cherche le départ de la diagonale en bas à gauche
+		posStart = p;
+		for(int i=0; pos_row -i >= 0 && pos_col-i >= 0 ;i++)		
+			posStart = new Position(pos_row-i,pos_col-i);			
+				
+		
+		pos_row = posStart.getRow();
+		pos_col = posStart.getCol();
+		
+		for(int i=0; pos_row+i < nbLines && pos_col+i<nbColumns ;i++){
+			
+			Chip currentChip = this.chips[pos_row+i][pos_col+i];
+			
+			if(isCaseFree(pos_row+i,pos_col+i)){
+				qm.incFree();
+			}			
+			else if(!isCaseFree(pos_row+i,pos_col+i) && currentChip.getPlayer() != player){
+				qm.incChipOppPlayer();
+			}
+			else{				
+				qm.incChipCurPlayer();
+			}	
+			
+		}
+		
+		qm.end();
+		
+		pos_row = p.getRow();
+		pos_col = p.getCol();
+		
+		// Cherche le départ de la diagonale en bas à droite
+		posStart = p;
+		for(int i=0; pos_row -i >= 0 && pos_col+i < nbColumns ;i++)		
+			posStart = new Position(pos_row-i,pos_col+i);			
+				
+		
+		pos_row = posStart.getRow();
+		pos_col = posStart.getCol();
+		
+		for(int i=0; pos_row+i < nbLines && pos_col-i >=0 ;i++){
+			
+			Chip currentChip = this.chips[pos_row+i][pos_col-i];
+			
+			if(isCaseFree(pos_row+i,pos_col-i)){
+				qm.incFree();
+			}			
+			else if(!isCaseFree(pos_row+i,pos_col-i) && currentChip.getPlayer() != player){
+				qm.incChipOppPlayer();
+			}
+			else{				
+				qm.incChipCurPlayer();
+			}	
+			
+		}
+		
+		qm.end();
+		
+		
+		return qm;
+		
+		
 	}
 	
 	
@@ -163,7 +345,8 @@ public class Grid {
 		System.out.printf("Plateau :\n");
 		for(i=nbLines-1; i>=0; i--){
 			for(j=0; j<nbColumns; j++){
-				if(!this.isCaseFree(i, j)){
+				if(!this.isCaseFree(i, j) ){
+					
 					if(this.chips[i][j].getPlayer().getId() == 1)
 						player = "X";
 					else if(this.chips[i][j].getPlayer().getId() == 2)
@@ -176,15 +359,8 @@ public class Grid {
 			}
 			
 			System.out.printf("\n");
+			
 		}
-		/*String col_sep = "|";
-		String row_sep = "\n%s+\n"%("+-----"*this.chips[0].length);
-		String s= row_sep;
-        for i in range(len(mat)):
-            s+=col_sep
-            for j in range(len(mat[0])):
-                s+='%5s%s'%(mat[i][j],col_sep)
-            s+=row_sep
-        return print(s)*/
+	
 	}
 }

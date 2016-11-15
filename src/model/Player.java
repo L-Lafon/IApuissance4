@@ -38,6 +38,10 @@ public class Player {
 		return this.ia;
 	}
 	
+	public String toString(){
+		return "Player";
+	}
+	
 	
 	
 

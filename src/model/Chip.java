@@ -14,5 +14,9 @@ public class Chip {
 		return this.player;
 	}
 	
+	public String toString(){
+		return "Joueur";
+	}
+	
 
 }

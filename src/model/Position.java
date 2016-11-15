@@ -18,4 +18,8 @@ public class Position extends Point {
 	public int getCol(){
 		return this.x;
 	}
+	
+	public String toString(){
+		return "[Colonne:"+x+",Ligne:"+y+"]";
+	}
 }

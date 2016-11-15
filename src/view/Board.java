@@ -49,7 +49,7 @@ public class Board extends AnchorPane{
 	
 	public void update(Color[][] data, int lines, int columns){
 		
-		System.out.println("height"+this.getHeight());
+		//System.out.println("height"+this.getHeight());
 		
 		double win_width = this.getWidth();
 		double win_height = this.getHeight();

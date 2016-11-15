@@ -27,7 +27,7 @@ public class Game {
 		players[0].setIA(0);
 		
 		players[1] = new Player(2,Color.RED, "Joueur 2");
-		players[1].setIA(1);
+		players[1].setIA(2);
 		
 		// Par défaut
 		this.currentPlayerIndex=0;				
@@ -51,6 +51,10 @@ public class Game {
 	}
 	public Player getCurrentPlayer(){
 		return players[currentPlayerIndex];
+	}
+	
+	public Player getOpponentPlayer(){
+		return players[  getIndexCurrentPlayer() == 1 ? 0 : 1  ];
 	}
 	
 	public Player getWinner(){
