@@ -13,6 +13,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Paint;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
@@ -62,7 +66,7 @@ public class Board extends AnchorPane{
 		
 		board_background.setArcWidth(30);
 		board_background.setArcHeight(30);
-		board_background.setFill(Color.GREY);
+		board_background.setFill(degrade("#B5DBFF","#004593"));
 		
 		
 		this.getChildren().add(board_background);
@@ -92,6 +96,7 @@ public class Board extends AnchorPane{
 			if(data[lines-1][c] == null){
 				
 				Button arrow = new SelectColumn(this,c,"Placer");
+				arrow.setStyle("-fx-base: #123456;");
 				
 				
 				//arrow.setRadius( 20);
@@ -100,6 +105,7 @@ public class Board extends AnchorPane{
 				
 				AnchorPane.setLeftAnchor(arrow, hSpacing * (c+1) - hSpacing/4);
         		AnchorPane.setTopAnchor(arrow, 0.0);
+        		
 				
         		this.getChildren().add(arrow);
 				
@@ -112,7 +118,7 @@ public class Board extends AnchorPane{
         	for(int l=lines-1;l>=0; l--){        		
         		double v = vSpacing * (l+1) - vSpacing/2;
         		//System.out.println(l+":"+data[l][c]+","+v);
-        		Chip chip = new Chip(this,(data[l][c] != null) ? data[l][c] : Color.BLACK);
+        		Chip chip = new Chip(this,(data[l][c] != null) ? data[l][c] : Color.GREY);
         		AnchorPane.setLeftAnchor(chip, h);
         		AnchorPane.setBottomAnchor(chip, v);
         		//System.out.println("left:"+h+"-top:"+v);
@@ -120,7 +126,15 @@ public class Board extends AnchorPane{
         		this.getChildren().add(chip);
         	}
         }
-		
 	}
+	
+	public static Paint degrade(String colorWeb1,String colorWeb2){
+    	return new LinearGradient(0f, 0f, 0f, 1f, true, CycleMethod.NO_CYCLE,
+			new Stop[] {
+				new Stop(0, Color.web(colorWeb1)),
+				new Stop(1, Color.web(colorWeb2))
+			}
+		);
+    }
 
 }
