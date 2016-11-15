@@ -11,7 +11,7 @@ public class IA {
 	
 	Grid grid;
 	Player playerIA, playerOpponent;
-	int nbChipsForWinning=4;
+	int nbChipsToWin=4;
 	boolean gameOver;
 	
 	IA(Grid grid){

@@ -4,8 +4,8 @@ import javafx.scene.paint.Color;
 
 public class Grid {
 	
-	final static int NB_LINES = 4;
-	final static int NB_COLUMNS = 5;
+	final static int NB_LINES = 5;
+	final static int NB_COLUMNS = 6;
 	
 	Chip[][] chips;
 	public int nbLines,nbColumns;
