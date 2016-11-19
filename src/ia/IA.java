@@ -14,6 +14,16 @@ public class IA {
 	int nbChipsToWin=4;
 	boolean gameOver;
 	
+	
+	long startExecution, endExecution;
+	
+	
+	
+	
+	
+	
+	
+	
 	IA(Grid grid){
 		this(grid, null,null);
 	}
@@ -23,6 +33,9 @@ public class IA {
 		this.playerIA = pIA;
 		this.playerOpponent = pOpp;
 		this.gameOver=false;
+		
+		startExecution = endExecution = 0;
+		
 	}
 	
 	public boolean gameOver(Position p, Player player){
@@ -33,5 +46,18 @@ public class IA {
 				return true;
 		return false;
 	}
+	
+	public void startSearch(){
+		startExecution = System.nanoTime();;
+	}
+	public void endSearch(){
+		endExecution = System.nanoTime();;
+	}
+	public long getTimeSearch(){
+		return (endExecution - startExecution) / 1000;
+	}
+
+	
+	
 }
 

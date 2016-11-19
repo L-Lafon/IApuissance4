@@ -9,6 +9,7 @@ import ia.IA;
 import ia.IA1;
 import ia.IARandom;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Parent;
@@ -24,7 +25,7 @@ import model.Player;
 import model.Position;
 import view.WindowGame;
 
-public class Puissance4 extends Application{
+public class Puissance4 extends Application {
 	
 	private Stage stage;
 		
@@ -109,7 +110,7 @@ public class Puissance4 extends Application{
 		game.setWinner(null);
 		
 		// Si c'est à l'IA de jouer, elle va jouer, sinon rien faire
-		playIA();
+		searchIA();
 	}
 	
 	public void insertChip(int column){
@@ -162,29 +163,75 @@ public class Puissance4 extends Application{
 	
 	public void nextRound(){
 		
+		if(game.grid.isFull())
+			windowGame.setIndication("Match Nul !");
+		
 		if(game.getCurrentPlayer().isIA() && !game.gameOver()){
-			this.playIA();
+			this.searchIA();
 		}
 	}
 	
-	public void playIA(){
-		Player curPlayer = game.getCurrentPlayer();
-		Position p = null;;
+	public void searchIA(){		
 		
-		Player playerIA = game.getCurrentPlayer();
-		//PlayerOpponent = 
-		if(game.getCurrentPlayer().getTypeIA() == IA.IA_RANDOM){
-			IARandom ia;
-			ia = (IARandom) new IARandom(game.getGrid());	
-			p = ia.play();
-		}
-		if(game.getCurrentPlayer().getTypeIA() == IA.IA_2){
-			IA1 ia;
+		
+		Thread threadIA = new Thread() {
 			
-			ia = (IA1) new IA1(game.getGrid(), game.getCurrentPlayer(), game.getOpponentPlayer());	
-			p = ia.play();
-		}
+			Position p=null;;
+			long timeExecution;
+			
+			public void run() {
+				
+				
+				
+				
+				
+				if(game.getCurrentPlayer().getTypeIA() == IA.IA_RANDOM){
+					
+					IARandom ia = (IARandom) new IARandom(game.getGrid());
+					p = ia.play();
+					timeExecution = ia.getTimeSearch();
+					
+				}
+				if(game.getCurrentPlayer().getTypeIA() == IA.IA_2){
+								
+					IA1 ia = (IA1) new IA1(game.getGrid(), game.getCurrentPlayer(), game.getOpponentPlayer());	
+					p = ia.play();
+					timeExecution = ia.getTimeSearch();
+				}
+				
+				int timeToSleep = 300 - (int)(timeExecution/1000);
+				
+				try{
+					Thread.sleep(timeToSleep);
+				}
+				catch(Exception e){
+					
+				}
+				
+				
+				Platform.runLater(
+						() -> playIA(p));
+				
+				
+				
+				
 		
+			}
+			
+		};
+		
+		threadIA.start();
+		
+		
+		
+		
+		
+		
+
+	}
+
+	
+	public void playIA(Position p){
 		if(p != null)		
 			insertChip(p.getCol());
 		else

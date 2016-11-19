@@ -30,11 +30,11 @@ public class IA1 extends IA{
 				
 				
 				if(this.playerIA.getId()==1)
-					val = this.min(new Position(line, i),grid,1);				
+					val = this.min(new Position(line, i),grid,5);				
 				else
-					val = this.min(new Position(line, i),grid,4);				
+					val = this.min(new Position(line, i),grid,5);				
 				
-				if((val >= val_max && new Random().nextBoolean()) || val > val_max){
+				if((val == val_max && new Random().nextBoolean()) || val > val_max){
 					
 					val_max = val;
 					col_max = i;
@@ -110,62 +110,80 @@ public class IA1 extends IA{
 	}
 	
 	public int eval(Position posPlayed,Grid currentGrid, Player pCurr, Player pOpp){
-		
-				
-	
-		int quality = 0;
-		
-		if( currentGrid.existsAlignment(posPlayed, pCurr) )
-			quality += 1000;
-		else if( currentGrid.existsAlignment(posPlayed, pOpp) )
-			quality += -1000;
-		
+		int score;
+		int qualityCurr = 0;
+		int qualityOpp = 0;
 		
 		
 		QualityMove qmVerticalCurr = grid.verticalAlignment(posPlayed,pCurr);
-		QualityMove qmVerticalOpp = grid.verticalAlignment(posPlayed,pOpp);
-		
-		
-		quality+=getWeight(qmVerticalCurr,qmVerticalOpp) - getWeight(qmVerticalOpp,qmVerticalCurr);
-		
-		
-		
-			
+		QualityMove qmVerticalOpp = grid.verticalAlignment(posPlayed,pOpp);		
 		
 		QualityMove qmHorizontalCurr = grid.horizontalAlignment(posPlayed,pCurr);
 		QualityMove qmHorizontalOpp = grid.horizontalAlignment(posPlayed,pOpp);
 		
-		
-		//quality+=qmHorizontal1.aligned - qmHorizontal2.aligned ;
-		quality+=getWeight(qmHorizontalCurr,qmHorizontalOpp) - getWeight(qmHorizontalOpp,qmHorizontalCurr) ;
-				
 		QualityMove qmDiagonalCurr = grid.diagonalAlignment(posPlayed,pCurr);
 		QualityMove qmDiagonalOpp = grid.diagonalAlignment(posPlayed,pOpp);
 		
-		//quality+=qmDiagonal1.aligned - qmDiagonal2.aligned ;
-		quality+=getWeight(qmDiagonalCurr,qmDiagonalOpp) - getWeight(qmDiagonalOpp,qmDiagonalCurr) ;
-		//currentGrid.showDebug();
-		System.out.println("Conf testée "+posPlayed+" - score : "+quality+" \n  "+qmVerticalCurr+" | "+qmVerticalOpp +" - "+qmHorizontalCurr+" -"+qmHorizontalOpp+"\n");
 		
-		return quality;
+		
+		qualityCurr+=getWeight(qmHorizontalCurr,qmHorizontalOpp) ;
+		qualityOpp +=getWeight(qmHorizontalOpp,qmHorizontalCurr);		
+		
+		qualityCurr+=getWeight(qmVerticalCurr,qmVerticalOpp);
+		qualityOpp +=  getWeight(qmVerticalOpp,qmVerticalCurr);		
+		
+		qualityCurr+=getWeight(qmDiagonalCurr,qmDiagonalOpp)  ;
+		qualityOpp +=getWeight(qmDiagonalOpp,qmDiagonalCurr);
+		//currentGrid.showDebug();
+		
+		score = qualityCurr - qualityOpp;
+		System.out.println("Conf testée "+posPlayed+" - j"+pCurr.getId()+"  - score : "+qualityCurr+" - "+qualityOpp+" = "+score*-1+" ");
+		//System.out.println(""+qmVerticalCurr+" | "+qmVerticalOpp +" - "+qmHorizontalCurr+" -"+qmHorizontalOpp+"\n");
+		
+		return score;
 	}
 	
 	public int getWeight(QualityMove qmCurr, QualityMove qmOpp){
 		
-		final int coef_aligned = 10;
+		
 		
 		int weight=0;;
 		
 		
+		// Le joueur gagne
+		
+		if(qmCurr.aligned == this.nbChipsToWin){
+			weight += 500;
+		}		
 		
 		
-		// It could win
+		
+		// On peut encore gagner
 		if(qmCurr.alignedPossible >= nbChipsToWin ){
-			weight += 20;
-			weight += qmCurr.aligned*coef_aligned;
+			weight += 10;
+			weight += qmCurr.aligned*10;
+			weight += qmCurr.alignedPossible;
+			
+			if(qmCurr.serieCurrPlayer >= nbChipsToWin ){
+				if(qmCurr.freeBetweenSeriesCurr == 1)
+					weight += 50;
+				else if(qmCurr.freeBetweenSeriesCurr == 2)
+					weight += 20;
+				else if(qmCurr.freeBetweenSeriesCurr == 3)
+					weight += 5;	
+			
+			}
+			
+			weight += (qmCurr.stopOpposant);			
 		}
+		
+		// On ne peut plus gagner sur cette ligne
 		else
-			weight -= 0;
+			weight -= -10;
+		
+		
+		
+	
 		
 		
 		
