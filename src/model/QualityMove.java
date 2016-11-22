@@ -110,8 +110,10 @@ public class QualityMove {
 		
 		clearTmp_aligned();
 		
-		if(serieCurrPlayer>0)
+		if(serieCurrPlayer>0){
 			tmp_freeBetweenSeriesCurr++;
+			serieCurrPlayer++;
+		}
 			
 	}
 	

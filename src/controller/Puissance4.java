@@ -120,7 +120,7 @@ public class Puissance4 extends Application {
 		if(!game.gameOver() && !grid.isColumnFull(column)){
 			
 			line = grid.add(column, new Chip(game.getCurrentPlayer()));
-		
+			
 			// Vérification si pions alignés par rapport au dernier pion déposé
 			//int winner;
 			if((grid.existsAlignment(new Position(line,column),game.getCurrentPlayer()))){
@@ -135,6 +135,8 @@ public class Puissance4 extends Application {
 				this.switchPlayer();
 			
 			}
+			
+			
 			
 			
 			this.updateView();

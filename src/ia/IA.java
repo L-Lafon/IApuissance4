@@ -39,7 +39,10 @@ public class IA {
 	}
 	
 	public boolean gameOver(Position p, Player player){
-		if(grid.existsAlignment(p,player))
+		if(grid.existsAlignment(p,playerIA))
+			return true;
+		
+		if(grid.existsAlignment(p,playerOpponent))
 			return true;
 		
 		if(grid.isFull())
