@@ -103,8 +103,8 @@ public class Board extends AnchorPane{
 				//arrow.setFill(Color.GREEN);
 				
 				
-				AnchorPane.setLeftAnchor(arrow, hSpacing * (c+1) - hSpacing/4);
-        		AnchorPane.setTopAnchor(arrow, 0.0);
+				AnchorPane.setLeftAnchor(arrow, hSpacing * (c+1) - hSpacing/4 );
+        		AnchorPane.setTopAnchor(arrow, 25.0);
         		
 				
         		this.getChildren().add(arrow);
