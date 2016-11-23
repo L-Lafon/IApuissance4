@@ -3,14 +3,21 @@ package view;
 import java.io.IOException;
 
 import controller.Puissance4;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextFlow;
@@ -40,6 +47,49 @@ public class WindowGame extends Scene  {
 			System.exit(0);
 		}
 		
+		/* Menu */
+		MenuBar menuBar = new MenuBar(); 
+	    // primary stage???
+	    // vient de public void start(Stage primaryStage) {
+		layout.setTop(menuBar);
+		
+		Menu fileMenu = new Menu("File");
+	    MenuItem resetMenuItem = new MenuItem("Reset");
+	    MenuItem exitMenuItem = new MenuItem("Exit");
+	    /* Fonctions pour les boutons */
+	    resetMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	            System.out.println("reset");
+	        }
+	    });
+	    exitMenuItem.setOnAction(actionEvent -> Platform.exit());
+	    
+	    fileMenu.getItems().addAll(resetMenuItem, new SeparatorMenuItem(), exitMenuItem);
+	    
+	    Menu aiMenu = new Menu("AI Switcher");
+	    MenuItem randomMenuItem = new MenuItem("Random AI");
+	    MenuItem minimaxMenuItem = new MenuItem("Minimax AI");
+	    /* Fonctions pour les boutons */
+	    randomMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	            System.out.println("random");
+	        }
+	    });
+	    minimaxMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	            System.out.println("minimax");
+	        }
+	    });
+	    aiMenu.getItems().addAll(randomMenuItem, minimaxMenuItem);
+	    
+	    Menu gameModeMenu = new Menu("Game Mode");
+	    MenuItem pVSaiMenuItem = new MenuItem("Player VS AI");
+	    MenuItem aiVSaiMenuItem = new MenuItem("AI VS AI");
+	    gameModeMenu.getItems().addAll(pVSaiMenuItem, aiVSaiMenuItem);
+	    
+	    menuBar.getMenus().addAll(fileMenu,aiMenu,gameModeMenu);
+	    /* fin Menu */
+		
 		board = new Board(this);
 		layout.setCenter(  board  );
 		
@@ -52,7 +102,6 @@ public class WindowGame extends Scene  {
 		
 		
 		System.out.println(layout.getCenter());
-		
 		
 		
 		
@@ -70,7 +119,7 @@ public class WindowGame extends Scene  {
 		    }
 		});*/
 		
-		
+		 
 	}
 	
 	public void constructLayout(){

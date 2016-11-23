@@ -1,11 +1,9 @@
 package view;
 
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.scene.Group;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -66,7 +64,7 @@ public class Board extends AnchorPane{
 		
 		//board_background.setArcWidth(30);
 		//board_background.setArcHeight(30);
-		board_background.setFill(degrade("#B5DBFF","#004593"));
+		board_background.setFill(degrade("#FFA37C","#BC430F"));
 		
 		
 		this.getChildren().add(board_background);
@@ -96,7 +94,7 @@ public class Board extends AnchorPane{
 			if(data[lines-1][c] == null){
 				
 				Button arrow = new SelectColumn(this,c,"Placer");
-				arrow.setStyle("-fx-base: #123456;");
+				arrow.setStyle("-fx-base: #FFFFE0;");
 				
 				
 				//arrow.setRadius( 20);
@@ -104,7 +102,7 @@ public class Board extends AnchorPane{
 				
 				
 				AnchorPane.setLeftAnchor(arrow, hSpacing * (c+1) - hSpacing/4 );
-        		AnchorPane.setTopAnchor(arrow, 25.0);
+        		AnchorPane.setTopAnchor(arrow, 15.0);
         		
 				
         		this.getChildren().add(arrow);
@@ -118,7 +116,7 @@ public class Board extends AnchorPane{
         	for(int l=lines-1;l>=0; l--){        		
         		double v = vSpacing * (l+1) - vSpacing/2;
         		//System.out.println(l+":"+data[l][c]+","+v);
-        		Chip chip = new Chip(this,(data[l][c] != null) ? data[l][c] : Color.GREY);
+        		Chip chip = new Chip(this,(data[l][c] != null) ? data[l][c] : Color.LIGHTGRAY);
         		AnchorPane.setLeftAnchor(chip, h);
         		AnchorPane.setBottomAnchor(chip, v);
         		//System.out.println("left:"+h+"-top:"+v);
