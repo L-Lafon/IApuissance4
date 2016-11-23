@@ -196,40 +196,14 @@ public class IA1 extends IA{
 		//System.out.println("Conf testée "+posPlayed+" - j"+pCurr.getId()+"  - score : "+qualityCurr+" - "+qualityOpp+" = "+(qualityCurr - qualityOpp)+" ");
 		
 		
-		if(pCurr != null)
-			return( qualityCurr - qualityOpp );
+		return( qualityCurr - qualityOpp );
 			
 		//currentGrid.showDebug();
 		//grid.showDebug();
 		//System.out.println("_________");
 		
 		
-		QualityMove qmVerticalCurr = currentGrid.verticalAlignment(posPlayed,pCurr);
-		QualityMove qmVerticalOpp = currentGrid.verticalAlignment(posPlayed,pOpp);		
 		
-		QualityMove qmHorizontalCurr = currentGrid.horizontalAlignment(posPlayed,pCurr);
-		QualityMove qmHorizontalOpp = currentGrid.horizontalAlignment(posPlayed,pOpp);
-		
-		QualityMove qmDiagonalCurr = currentGrid.diagonalAlignment(posPlayed,pCurr);
-		QualityMove qmDiagonalOpp = currentGrid.diagonalAlignment(posPlayed,pOpp);
-		
-		
-		qualityCurr+=getWeight(qmVerticalCurr,qmVerticalOpp);
-		qualityOpp +=  getWeight(qmVerticalOpp,qmVerticalCurr);			
-	
-		
-		qualityCurr+=getWeight(qmHorizontalCurr,qmHorizontalOpp) ;
-		qualityOpp +=getWeight(qmHorizontalOpp,qmHorizontalCurr);	
-		
-		qualityCurr+=getWeight(qmDiagonalCurr,qmDiagonalOpp)  ;
-		qualityOpp +=getWeight(qmDiagonalOpp,qmDiagonalCurr);
-		//currentGrid.showDebug();
-		
-		score = qualityCurr - qualityOpp;
-		System.out.println("Conf testée "+posPlayed+" - j"+pCurr.getId()+"  - score : "+qualityCurr+" - "+qualityOpp+" = "+score*-1+" ");
-		//System.out.println(""+qmVerticalCurr+" | "+qmVerticalOpp +" - "+qmHorizontalCurr+" -"+qmHorizontalOpp+"\n");
-		
-		return score;
 	}
 	
 	public int getWeight(QualityMove qmCurr, QualityMove qmOpp){
