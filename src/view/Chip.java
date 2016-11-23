@@ -39,7 +39,7 @@ public class Chip extends Circle{
         this.setTranslateY(0);
         this.setFill(color);
         
-        if(color==Color.GREY){
+        if(color==Color.LIGHTGRAY){
         	InnerShadow innerShadow = new InnerShadow();
 			innerShadow.setOffsetX(3);
 			innerShadow.setOffsetY(3);
