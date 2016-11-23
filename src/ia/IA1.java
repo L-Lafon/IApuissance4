@@ -54,7 +54,7 @@ public class IA1 extends IA{
 	}
 	
 	public int min(Position posPlayed,Grid currentGrid, int depth){
-		if(depth == 0 || this.gameOver(posPlayed,playerOpponent))
+		if(depth == 0 || this.gameOver())
 			return 1 * this.eval(posPlayed,currentGrid,     playerIA,playerOpponent);
 		
 		int val_min = Integer.MAX_VALUE;
@@ -84,7 +84,7 @@ public class IA1 extends IA{
 	}
 	
 	public int max(Position posPlayed, Grid currentGrid, int depth){
-		if(depth == 0 || this.gameOver(posPlayed,playerIA)) 
+		if(depth == 0 || this.gameOver()) 
 			return this.eval(posPlayed, currentGrid, playerIA, playerOpponent);
 		
 		int val_max = Integer.MIN_VALUE;
@@ -124,17 +124,21 @@ public class IA1 extends IA{
 		Pattern pattern;
 		
 		HashMap<String, Integer> weight = new HashMap<String,Integer>();
-		weight.put("1111", 1000);
+		weight.put("1111", 1000-currentGrid.getnbChips()*5);
 		weight.put("_111_", 50);
-		weight.put("11_1", 10);
-		weight.put("1_11", 10);
-		weight.put("1__1", 5);
-		weight.put("11__", 5);
-		weight.put("__11", 5);		
+		weight.put("111_", 20);
+		weight.put("_111", 20);
+		weight.put("11_1", 20);
+		weight.put("1_11", 20);
+		weight.put("1__1", 10);
+		weight.put("11__", 10);
+		weight.put("__11", 10);		
 		weight.put("1___", 2);
 		weight.put("_1__", 2);
 		weight.put("__1_", 2);
 		weight.put("___1", 2);
+		weight.put("____", 2);
+	
 		
 		/*weight.put("2212", 30);
 		weight.put("2122", 30);

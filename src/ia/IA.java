@@ -1,5 +1,7 @@
 package ia;
 
+import java.util.regex.Pattern;
+
 import model.Grid;
 import model.Player;
 import model.Position;
@@ -38,16 +40,17 @@ public class IA {
 		
 	}
 	
-	public boolean gameOver(Position p, Player player){
-		if(grid.existsAlignment(p,playerIA))
-			return true;
+	public boolean gameOver(){
 		
-		if(grid.existsAlignment(p,playerOpponent))
-			return true;
 		
 		if(grid.isFull())
 				return true;
-		return false;
+		
+		String state = grid.getStateLines();
+		
+		Pattern pattern = Pattern.compile("XXXX|0000");;
+	    return pattern.matcher(state).find();
+		
 	}
 	
 	public void startSearch(){

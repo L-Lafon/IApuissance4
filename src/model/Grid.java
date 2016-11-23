@@ -4,11 +4,13 @@ import javafx.scene.paint.Color;
 
 public class Grid {
 	
-	final static int NB_LINES = 5;
-	final static int NB_COLUMNS = 6;
+	final static int NB_LINES = 6;
+	final static int NB_COLUMNS = 7;
 	
 	Chip[][] chips;
 	public int nbLines,nbColumns;
+	
+	int nbChips;
 	
 	
 	/** Initialisation du plateau
@@ -31,6 +33,8 @@ public class Grid {
 		for(i=0; i<this.nbLines;i++)
 			for(j=0;j<this.nbColumns; j++)
 				this.chips[i][j]=null;
+		
+		nbChips = 0;
 	}
 	
 	public Chip[][] getData(){
@@ -69,9 +73,11 @@ public class Grid {
 	// Pour l'ia plus tard
 	public void add(int l, int c, Chip p){
 		this.chips[l][c] = p;
+		nbChips++;
 	}
 	public void remove(int l, int c){
 		this.chips[l][c] = null;
+		nbChips--;
 	}
 	
 	public boolean isColumnFull(int col){
@@ -93,112 +99,26 @@ public class Grid {
 				return false;
 		}
 		
-		return true;
-		
+		return true;		
 		
 	}
 	
-	public boolean existsAlignment(Position p, Player player){
-		
-		
-		
-		
-		if(verticalAlignment(p,player).aligned >= 4){
-			System.out.println("Alignement vertical");
-			return true;
-		}
-		
-		if(horizontalAlignment(p,player).aligned >= 4){
-			System.out.println("Alignement horizontal");
-			return true;
-		}
-		
-		if(diagonalAlignment(p,player).aligned >= 4){
-			System.out.println("Alignement diagonal");
-			return true;
-		}
-			
-		
-		return false;
-		
-		/*
-		 int pos_row = p.getRow();
-		int pos_col = p.getCol();
-		Player currPlayer = this.chips[pos_row][pos_col].getPlayer();
-		
-		int aligned;
-		
-		// Détection verticale
-		
-		aligned = 1;
-		if(p.getRow()+1 >= 4){			
-			
-			for(int i=1; i<=3;i++){
-				if(this.chips[pos_row-i][pos_col].getPlayer() == currPlayer)
-					aligned++;					
-				else
-					break;
-			}
-			
-			if(aligned == 4)
-				return true;			
-			
-		}	
-		
-		// Détection horizontale
-		aligned = 1;
-		
-		for(int i=1; i<=3;i++){
-			if(pos_col-i >= 0 && !this.isCaseFree(pos_row, pos_col-i)  && this.chips[pos_row][pos_col-i].getPlayer() == currPlayer)
-				aligned++;
-			else
-				break;
-		}
-		
-		for(int i=1; i<=3;i++){
-			if(pos_col+i < nbColumns && !this.isCaseFree(pos_row, pos_col+i) && this.chips[pos_row][pos_col+i].getPlayer() == currPlayer)
-				aligned++;
-			else
-				break;
-		}
-		
-		if(aligned == 4)
-			return true;	
-		
-		// Détection diagonale bas gauche
-		
-		aligned = 1;
-		
-		for(int i=1; i<=3;i++){
-			if(pos_row-i >= 0 && pos_col-i >= 0 && !this.isCaseFree(pos_row-i, pos_col-i) && this.chips[pos_row-i][pos_col-i].getPlayer() == currPlayer)
-				aligned++;
-			else
-				break;
-		}
-		
-		// Détection diagonale haut droite
-		
-		for(int i=1; i<=3;i++){
-			if(pos_row+i < nbLines && pos_col+i < nbColumns && !this.isCaseFree(pos_row+i, pos_col+i) && this.chips[pos_row+i][pos_col+i].getPlayer() == currPlayer)
-				aligned++;
-			else
-				break;
-		}
-		
-		if(aligned == 4)
-			return true;		
-		
-		
-		return false;
-		
-		*/
+	public int getnbChips(){
+		return nbChips;
 	}
+	
+
+	
+	
 	
 	int nbAlignmentForWinning = 4;
 	
 	
 	public String getStateLines(){
-		return "";
+		return getStateVerticalLine()+"|"
+				+getStateHorizontalLine()+"|"
+				+getStateDiagonal1Line()+"|"
+				+getStateDiagonal2Line();
 	}
 	
 	public String getSymbol(int row, int col){

@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -123,7 +124,7 @@ public class Puissance4 extends Application {
 			
 			// Vérification si pions alignés par rapport au dernier pion déposé
 			//int winner;
-			if((grid.existsAlignment(new Position(line,column),game.getCurrentPlayer()))){
+			if(existsAlignment()){
 				//this.winner=this.pions[line][column].getPlayer();
 				game.setWinner(game.getCurrentPlayer());
 				windowGame.setIndication("Victoire de "+game.getCurrentPlayer().getName()+"");
@@ -164,12 +165,13 @@ public class Puissance4 extends Application {
 	}
 	
 	public void nextRound(){
-		
-		if(game.grid.isFull())
-			windowGame.setIndication("Match Nul !");
-		
-		if(game.getCurrentPlayer().isIA() && !game.gameOver()){
-			this.searchIA();
+		if(!game.gameOver()){
+			if(game.grid.isFull())
+				windowGame.setIndication("Match Nul !");
+			
+			if(game.getCurrentPlayer().isIA() && !game.gameOver()){
+				this.searchIA();
+			}
 		}
 	}
 	
@@ -238,6 +240,13 @@ public class Puissance4 extends Application {
 			insertChip(p.getCol());
 		else
 			System.out.println("IA NE SAIT PLUS QUOI FAIRE");
+	}
+	
+	public boolean existsAlignment(){
+		String state = game.grid.getStateLines();
+		
+		Pattern pattern = Pattern.compile("XXXX|0000");;
+	    return pattern.matcher(state).find();
 	}
 	
 	public void updateView(){
