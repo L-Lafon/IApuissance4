@@ -54,7 +54,7 @@ public class Puissance4 extends Application {
 		
 		// Paramètres de la fenêtre
 		stage.setWidth(800);
-		stage.setHeight(600);
+		stage.setHeight(630);
 		stage.setTitle("Projet IA : Puissance 4");
 		
 		//...
@@ -112,6 +112,12 @@ public class Puissance4 extends Application {
 		
 		// Si c'est à l'IA de jouer, elle va jouer, sinon rien faire
 		searchIA();
+	}
+	
+	public void resetGame(){
+		initGame();
+		game=new Game();
+		this.updateView();
 	}
 	
 	public void insertChip(int column){

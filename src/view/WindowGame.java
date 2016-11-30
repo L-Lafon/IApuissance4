@@ -60,6 +60,7 @@ public class WindowGame extends Scene  {
 	    resetMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
 	            System.out.println("reset");
+	            app.initGame();
 	        }
 	    });
 	    exitMenuItem.setOnAction(actionEvent -> Platform.exit());

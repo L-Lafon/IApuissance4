@@ -24,7 +24,7 @@ public class Game {
 		
 		players = new Player[2];
 		players[0] = new Player(1,Color.YELLOW, "Joueur 1");
-		players[0].setIA(0);
+		players[0].setIA(2);
 	
 		players[1] = new Player(2,Color.RED, "Joueur 2");
 		players[1].setIA(2);
@@ -67,6 +67,10 @@ public class Game {
 	
 	public boolean gameOver(){
 		return this.winner != null;
+	}
+	
+	public void reset(){
+		
 	}
 	
 	

@@ -20,9 +20,11 @@ public class IA1 extends IA{
 	
 	public Position play(){
 		
+		Integer alpha = Integer.MIN_VALUE, beta = Integer.MAX_VALUE;
+		
 		int val_max = Integer.MIN_VALUE;
 		int col_max=0;;
-		int val=0;;
+		int val=Integer.MIN_VALUE;;
 		
 		int i;
 		int line;
@@ -34,9 +36,9 @@ public class IA1 extends IA{
 				
 				
 				if(this.playerIA.getId()==1)
-					val = this.min(new Position(line, i),grid,1);				
+					val = this.min(new Position(line, i),grid,4,alpha,beta);				
 				else
-					val = this.min(new Position(line, i),grid,5);				
+					val = this.min(new Position(line, i),grid,6,alpha,beta);				
 				
 				if((val == val_max && new Random().nextBoolean()) || val > val_max){
 					
@@ -53,7 +55,7 @@ public class IA1 extends IA{
 		return new Position(-1, col_max);
 	}
 	
-	public int min(Position posPlayed,Grid currentGrid, int depth){
+	public int min(Position posPlayed,Grid currentGrid, int depth, int alpha, int beta){
 		if(depth == 0 || this.gameOver())
 			return 1 * this.eval(posPlayed,currentGrid,     playerIA,playerOpponent);
 		
@@ -66,14 +68,21 @@ public class IA1 extends IA{
 			if(!currentGrid.isColumnFull(i)){
 				// Simulation du coup
 				line = currentGrid.add(i, new Chip(playerOpponent));
-				val = this.max(new Position(line,i),currentGrid,depth-1);
+				val = this.max(new Position(line,i),currentGrid,depth-1,alpha,beta);
 				
 				if((val == val_min && new Random().nextBoolean()) || val < val_min){
 					val_min = val;					
 				}
 				
+				
+				
 				// Annulation du coup joué
 				currentGrid.remove(line, i);
+				
+				if(alpha >= val) // élagage
+					return val;
+				
+				beta = Math.min(beta,val); 
 				
 			}			
 		}
@@ -83,7 +92,7 @@ public class IA1 extends IA{
 		
 	}
 	
-	public int max(Position posPlayed, Grid currentGrid, int depth){
+	public int max(Position posPlayed, Grid currentGrid, int depth, int alpha, int beta){
 		if(depth == 0 || this.gameOver()) 
 			return this.eval(posPlayed, currentGrid, playerIA, playerOpponent);
 		
@@ -96,14 +105,20 @@ public class IA1 extends IA{
 			if(!currentGrid.isColumnFull(i)){
 				// Simulation du coup
 				line = currentGrid.add(i, new Chip(this.playerIA));
-				val = this.min(new Position(line,i),currentGrid,depth-1);
+				val = this.min(new Position(line,i),currentGrid,depth-1,alpha,beta);
 				
 				if((val == val_max && new Random().nextBoolean()) || val > val_max){
 					val_max = val;					
 				}
 				
+								
 				// Annulation du coup joué
 				currentGrid.remove(line, i);
+				
+				if(val >= beta)  // élagage 
+					return val;
+				
+				alpha = Math.max(alpha,val);
 				
 			}			
 		}
@@ -140,10 +155,10 @@ public class IA1 extends IA{
 		weight.put("____", 2);
 	
 		
-		/*weight.put("2212", 30);
+		weight.put("2212", 30);
 		weight.put("2122", 30);
 		weight.put("2221", 30);
-		weight.put("1222", 30);*/
+		weight.put("1222", 30);
 		
 		String currentPattern="";
 		String pCurrPattern="";
