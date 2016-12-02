@@ -5,6 +5,8 @@ import javafx.event.ActionEvent;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -12,6 +14,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Paint;
 import javafx.scene.paint.Stop;
@@ -22,6 +25,8 @@ public class Board extends AnchorPane{
 	final public WindowGame _wg;
 	public int lines=0;
 	public int columns=0;
+	 
+	
 	
 	
 	Board(WindowGame _wg){
@@ -64,13 +69,13 @@ public class Board extends AnchorPane{
 		
 		//board_background.setArcWidth(30);
 		//board_background.setArcHeight(30);
-		board_background.setFill(degrade("#FFA37C","#BC430F"));
-		
+		board_background.setFill(degrade("#9B7A7A","#5E3030"));
+
+		//board_background.setFill(bgImg);
 		
 		this.getChildren().add(board_background);
 		
 		//this.setStyle("-fx-background-color:black");
-		
 		
 		
 		
@@ -116,7 +121,7 @@ public class Board extends AnchorPane{
         	for(int l=lines-1;l>=0; l--){        		
         		double v = vSpacing * (l+1) - vSpacing/2;
         		//System.out.println(l+":"+data[l][c]+","+v);
-        		Chip chip = new Chip(this,(data[l][c] != null) ? data[l][c] : Color.LIGHTGRAY);
+        		Chip chip = new Chip(this,(data[l][c] != null) ? data[l][c] : Color.GRAY);
         		AnchorPane.setLeftAnchor(chip, h);
         		AnchorPane.setBottomAnchor(chip, v);
         		//System.out.println("left:"+h+"-top:"+v);
@@ -134,5 +139,10 @@ public class Board extends AnchorPane{
 			}
 		);
     }
+	
+	public static void afficheEmoji(Rectangle rect){
+		Image imgEmoji = new Image("../emoji-confetti.jpg") ;
+		ImagePattern imgPatternEmoji = new ImagePattern(imgEmoji);
+	}
 
 }
