@@ -13,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -22,6 +23,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
+import model.Game;
 
 public class WindowGame extends Scene  {
 	
@@ -68,24 +70,32 @@ public class WindowGame extends Scene  {
 	    fileMenu.getItems().addAll(resetMenuItem, new SeparatorMenuItem(), exitMenuItem);
 	    
 	    Menu aiMenu = new Menu("AI Switcher");
-	    MenuItem randomMenuItem = new MenuItem("Random AI");
-	    MenuItem minimaxMenuItem = new MenuItem("Minimax AI");
+	    CheckMenuItem randomMenuItem = new CheckMenuItem("Random AI");
+	    CheckMenuItem simpleMenuItem = new CheckMenuItem("Simple AI");
+	    CheckMenuItem minimaxMenuItem = new CheckMenuItem("Minimax AI");
+	    randomMenuItem.setSelected(true);
 	    /* Fonctions pour les boutons */
 	    randomMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
-	            System.out.println("random");
+				players[1].setIA(1);
 	        }
 	    });
 	    minimaxMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
-	            System.out.println("minimax");
+	            players[1].setIA(2);
 	        }
 	    });
-	    aiMenu.getItems().addAll(randomMenuItem, minimaxMenuItem);
+	    simpleMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	        	players[1].setIA(3);
+	        }
+	    });
+	    aiMenu.getItems().addAll(randomMenuItem, simpleMenuItem, minimaxMenuItem);
 	    
 	    Menu gameModeMenu = new Menu("Game Mode");
-	    MenuItem pVSaiMenuItem = new MenuItem("Player VS AI");
-	    MenuItem aiVSaiMenuItem = new MenuItem("AI VS AI");
+	    CheckMenuItem pVSaiMenuItem = new CheckMenuItem("Player VS AI");
+	    CheckMenuItem aiVSaiMenuItem = new CheckMenuItem("AI VS AI");
+	    pVSaiMenuItem.setSelected(true);
 	    gameModeMenu.getItems().addAll(pVSaiMenuItem, aiVSaiMenuItem);
 	    
 	    menuBar.getMenus().addAll(fileMenu,aiMenu,gameModeMenu);

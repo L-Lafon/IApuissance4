@@ -14,7 +14,7 @@ public class Player {
 		id = i;
 		color = c;
 		name = n;
-		ia=0;
+		ia=0; // 0,1,2 ou 3
 		symbol=s;
 	}
 	public int getId(){

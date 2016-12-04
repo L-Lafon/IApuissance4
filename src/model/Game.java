@@ -7,7 +7,7 @@ import javafx.scene.paint.Color;
 public class Game {
 	public int currentGameId=0;
 	public Grid grid;
-	Player[] players;
+	public Player[] players;
 	int nbPionToWin=4;
 	int currentPlayerIndex;
 	Player winner;
