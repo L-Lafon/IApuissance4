@@ -9,8 +9,10 @@ import model.Position;
 public class IA {
 	
 	public final static int IA_RANDOM = 1;
-	public final static int IA_2 = 2;
+	public final static int IA_MINMAX_H1 = 2;
+	public final static int IA_MINMAX_H2 = 3;
 	
+	int typeIA;
 	Grid grid;
 	Player playerIA, playerOpponent;
 	int nbChipsToWin=4;
@@ -26,11 +28,12 @@ public class IA {
 	
 	
 	
-	IA(Grid grid){
-		this(grid, null,null);
+	IA(int typeIA,Grid grid){
+		this(typeIA,grid, null,null);
 	}
 	
-	IA(Grid grid, Player pIA, Player pOpp){
+	IA(int typeIA,Grid grid, Player pIA, Player pOpp){
+		this.typeIA=typeIA;
 		this.grid = grid;
 		this.playerIA = pIA;
 		this.playerOpponent = pOpp;
@@ -44,7 +47,7 @@ public class IA {
 		
 		
 		if(grid.isFull())
-				return true;
+			return true;
 		
 		String state = grid.getStateLines();
 		
@@ -61,6 +64,10 @@ public class IA {
 	}
 	public long getTimeSearch(){
 		return (endExecution - startExecution) / 1000;
+	}
+	
+	public Position play(){
+		return null;
 	}
 
 	

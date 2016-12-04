@@ -5,11 +5,12 @@ import java.util.Scanner;
 import javafx.scene.paint.Color;
 
 public class Game {
+	public int currentGameId=0;
 	public Grid grid;
 	Player[] players;
 	int nbPionToWin=4;
 	int currentPlayerIndex;
-	Player winner=null;;
+	Player winner;
 	
 	
 	/*public static void main(String[] args){
@@ -20,17 +21,18 @@ public class Game {
 	
 	
 	public Game(){
-		this.grid = new Grid();
+		
 		
 		players = new Player[2];
-		players[0] = new Player(1,Color.YELLOW, "Joueur 1");
-		players[0].setIA(2);
+		players[0] = new Player(1,Color.YELLOW, "Joueur 1","0");
+		players[0].setIA(0);
 	
-		players[1] = new Player(2,Color.RED, "Joueur 2");
-		players[1].setIA(2);
+		players[1] = new Player(2,Color.RED, "Joueur 2","X");
+		players[1].setIA(3);
 		
-		// Par défaut
-		this.currentPlayerIndex=0;				
+		
+		this.reset();
+				
 	}	
 	
 	
@@ -66,10 +68,15 @@ public class Game {
 	}
 	
 	public boolean gameOver(){
-		return this.winner != null;
+		return this.winner != null || grid.isFull();
 	}
 	
 	public void reset(){
+		
+		currentGameId++;
+		winner=null;		
+		this.currentPlayerIndex=0;	
+		grid=new Grid();
 		
 	}
 	

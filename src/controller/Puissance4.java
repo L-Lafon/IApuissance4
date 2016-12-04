@@ -1,23 +1,20 @@
 package controller;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.Scanner;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import ia.IA;
-import ia.IA1;
+import ia.IAMinMax;
 import ia.IARandom;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
+
 import javafx.stage.Stage;
 import model.Chip;
 import model.Game;
@@ -28,6 +25,8 @@ import view.WindowGame;
 
 public class Puissance4 extends Application {
 	
+	public static boolean STAT_ANALYSE_ON = false;
+	
 	private Stage stage;
 		
 	public Game game;
@@ -36,6 +35,18 @@ public class Puissance4 extends Application {
 	
 	public static void main(String[] args) {
 		System.out.println("-- Lancement application --");
+		
+		/*
+		// [X]{1}[_]{3,}|[X]{2}[_]{2,}|[X]{3}[_]{1,}
+		Pattern pattern = Pattern.compile("[X]{4}");
+	    Matcher matcher = pattern.matcher("XXXX_XXXX");
+	    while(matcher.find()) {		    	
+	    	System.out.println(matcher.group());
+	    }
+	    
+	    if(true)
+	    return ;
+	    */
 		
 		try{
 			Application.launch(Puissance4.class, args);
@@ -74,25 +85,6 @@ public class Puissance4 extends Application {
 		stage.show();
 		
 		
-		/*@SuppressWarnings("resource")
-		Scanner sc = new Scanner(System.in);
-		while(this.game.getWinner() == 0){
-			
-
-			System.out.println("Veuillez saisir une colonne (j"+game.getCurrentPlayer()+") :");
-			String str = sc.nextLine();
-			if(str.equals("quit") || str.equals(""))
-				return;
-			System.out.println(str);
-			this.motor.insertChip(Integer.parseInt(str));
-			
-			this.game.grid.showDebug();
-			
-			game.setCurrentPlayer( (game.getCurrentPlayer() == 1) ? 2 : 1  );
-		}
-		
-		sc.close();*/
-		
 		this.updateView();
 		
 	}
@@ -108,15 +100,16 @@ public class Puissance4 extends Application {
 	
 	public void initGame(){
 		this.fixPlayer(0);
-		game.setWinner(null);
+		game.reset();
 		
 		// Si c'est à l'IA de jouer, elle va jouer, sinon rien faire
-		searchIA();
+		nextRound();
 	}
 	
 	public void resetGame(){
 		initGame();
-		game=new Game();
+		
+		//game=new Game();
 		this.updateView();
 	}
 	
@@ -133,8 +126,11 @@ public class Puissance4 extends Application {
 			if(existsAlignment()){
 				//this.winner=this.pions[line][column].getPlayer();
 				game.setWinner(game.getCurrentPlayer());
-				windowGame.setIndication("Victoire de "+game.getCurrentPlayer().getName()+"");
-				System.out.println("Victoire de "+game.getWinner());
+				//windowGame.setIndication("Victoire de "+game.getCurrentPlayer().getName()+"");
+				
+				
+				
+				//System.out.println("Victoire de "+game.getWinner());
 				
 			}
 			else{
@@ -147,13 +143,7 @@ public class Puissance4 extends Application {
 			
 			
 			this.updateView();
-			/*game.grid.showDebug();
-			try{
-				Thread.sleep(500);
-			}
-			catch(Exception e){
-				
-			}*/
+	
 			
 			
 			this.nextRound();
@@ -163,7 +153,7 @@ public class Puissance4 extends Application {
 	
 	public void fixPlayer(int index){
 		game.setIndexCurrentPlayer( index  );	
-		windowGame.setIndication("Au tour de "+game.getCurrentPlayer().getName()+"");
+		windowGame.setIndication("Au tour de "+game.getCurrentPlayer().getName()+" de jouer");
 	}
 	
 	public void switchPlayer(){		
@@ -171,45 +161,74 @@ public class Puissance4 extends Application {
 	}
 	
 	public void nextRound(){
-		if(!game.gameOver()){
-			if(game.grid.isFull())
-				windowGame.setIndication("Match Nul !");
+		if(game.gameOver()){	
 			
-			if(game.getCurrentPlayer().isIA() && !game.gameOver()){
+			if(game.grid.isFull()){
+				windowGame.setIndication("Match Nul !");
+			}
+			else if(game.getWinner() != null){
+				windowGame.setIndication("Victoire de "+game.getWinner().getName());
+			}
+			
+			if(Puissance4.STAT_ANALYSE_ON == true)
+				statAnalyseOn();
+			
+		}
+		else{
+			
+			if(game.getCurrentPlayer().isIA() ){
 				this.searchIA();
 			}
 		}
+		
+	}
+	
+	public void statAnalyseOn(){
+		File f = new File("ia_prof2_iaprof6.txt");
+		try{
+		FileWriter fw = new FileWriter(f,true);
+		
+		int playerWinner = (game.grid.isFull()) ? 0 : game.getWinner().getId();
+		fw.write(""+game.grid.getnbChips()+";"+playerWinner+"\r\n");
+		fw.close();
+		}
+		catch(Exception e){
+			
+		}
+		
+		this.resetGame();
 	}
 	
 	public void searchIA(){		
 		
 		
-		Thread threadIA = new Thread() {
+		Thread threadIA = new Thread(Integer.toString(game.currentGameId)) {
 			
 			Position p=null;;
 			long timeExecution;
 			
 			public void run() {
 				
+				int typeIA = game.getCurrentPlayer().getTypeIA();
+				IA ia=null;;
 				
 				
-				
-				
-				if(game.getCurrentPlayer().getTypeIA() == IA.IA_RANDOM){
-					
-					IARandom ia = (IARandom) new IARandom(game.getGrid());
-					p = ia.play();
-					timeExecution = ia.getTimeSearch();
+				if(typeIA == IA.IA_RANDOM){					
+					ia = new IARandom(typeIA,game.getGrid());					
 					
 				}
-				if(game.getCurrentPlayer().getTypeIA() == IA.IA_2){
+				if(typeIA == IA.IA_MINMAX_H1 || typeIA == IA.IA_MINMAX_H2){
 								
-					IA1 ia = (IA1) new IA1(game.getGrid(), game.getCurrentPlayer(), game.getOpponentPlayer());	
-					p = ia.play();
-					timeExecution = ia.getTimeSearch();
+					ia = new IAMinMax(typeIA, game.getGrid(), game.getCurrentPlayer(), game.getOpponentPlayer());
+					
 				}
 				
-				int timeToSleep = 300 - (int)(timeExecution/1000);
+				if(ia == null)
+					return;
+				
+				p = ia.play();
+				timeExecution = ia.getTimeSearch();
+				int timeToSleep = -3000 - (int)(timeExecution/1000);
 				
 				try{
 					Thread.sleep(timeToSleep);
@@ -219,8 +238,11 @@ public class Puissance4 extends Application {
 				}
 				
 				
-				Platform.runLater(
+				// Si la recherche concerne pas une partie précédente (peut-être réinitialisée)
+				if(this.getName().equals(Integer.toString(game.currentGameId))){
+					Platform.runLater(
 						() -> playIA(p));
+				}
 				
 				
 				

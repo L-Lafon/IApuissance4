@@ -127,11 +127,10 @@ public class Grid {
 		
 		if(isCaseFree(row,col))
 			return "_";
-		else if(!isCaseFree(row,col) && currentChip.getPlayer().getId() ==1 ){
-			return "0";			
+		else{
+			return currentChip.getPlayer().getSymbol();			
 		}
-		else
-			return "X";
+		
 		
 	}
 	
@@ -385,10 +384,7 @@ public class Grid {
 			for(j=0; j<nbColumns; j++){
 				if(!this.isCaseFree(i, j) ){
 					
-					if(this.chips[i][j].getPlayer().getId() == 1)
-						player = "X";
-					else if(this.chips[i][j].getPlayer().getId() == 2)
-						player = "O";
+					player = this.chips[i][j].getPlayer().getSymbol();						
 				}
 				else
 					player = "-";

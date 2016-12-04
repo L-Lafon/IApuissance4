@@ -10,8 +10,8 @@ public class IARandom extends IA {
 	
 	
 	
-	public IARandom(Grid grid){
-		super(grid);
+	public IARandom(int typeIA,Grid grid){
+		super(typeIA,grid);
 	}
 	
 	public Position play(){
@@ -24,7 +24,7 @@ public class IARandom extends IA {
 		
 		Random rand = new Random();
 		int cRandom = rand.nextInt(columnsAvailable.size());
-		return new Position(0,cRandom);
+		return new Position(0,columnsAvailable.get(cRandom));
 		
 	}
 
