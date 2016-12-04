@@ -77,17 +77,23 @@ public class WindowGame extends Scene  {
 	    /* Fonctions pour les boutons */
 	    randomMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
-				players[1].setIA(1);
+	        	simpleMenuItem.setSelected(false);
+	        	minimaxMenuItem.setSelected(false);
+				//players[1].setIA(1);
 	        }
 	    });
 	    minimaxMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
-	            players[1].setIA(2);
+	        	randomMenuItem.setSelected(false);
+	        	simpleMenuItem.setSelected(false);
+	            //players[1].setIA(2);
 	        }
 	    });
 	    simpleMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
-	        	players[1].setIA(3);
+	        	randomMenuItem.setSelected(false);
+	        	minimaxMenuItem.setSelected(false);
+	        	//players[1].setIA(3);
 	        }
 	    });
 	    aiMenu.getItems().addAll(randomMenuItem, simpleMenuItem, minimaxMenuItem);
@@ -96,6 +102,18 @@ public class WindowGame extends Scene  {
 	    CheckMenuItem pVSaiMenuItem = new CheckMenuItem("Player VS AI");
 	    CheckMenuItem aiVSaiMenuItem = new CheckMenuItem("AI VS AI");
 	    pVSaiMenuItem.setSelected(true);
+	    pVSaiMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	        	aiVSaiMenuItem.setSelected(false);
+	        	//changer de mode
+	        }
+	    });
+	    aiVSaiMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+				pVSaiMenuItem.setSelected(false);
+				//changer de mode
+	        }
+	    });
 	    gameModeMenu.getItems().addAll(pVSaiMenuItem, aiVSaiMenuItem);
 	    
 	    menuBar.getMenus().addAll(fileMenu,aiMenu,gameModeMenu);
