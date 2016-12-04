@@ -32,8 +32,7 @@ public class IAMinMax extends IA{
 		for(i=0; i<grid.nbColumns; i++){
 			if(!grid.isColumnFull(i)){
 				// Simulation du coup				
-				line = grid.add(i, new Chip(this.playerIA));
-				
+				line = grid.add(i, new Chip(this.playerIA));				
 				
 				if(this.playerIA.getId()==1)
 					val = this.min(new Position(line, i),grid,4,alpha,beta);				
