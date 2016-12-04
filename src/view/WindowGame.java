@@ -78,6 +78,7 @@ public class WindowGame extends Scene  {
 	    /* Fonctions pour les boutons */
 	    playerMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
+	        	// Deselectionne les autres menus (impossible d'en avoir deux en mm tps)
 	        	randomMenuItem.setSelected(false);
 	        	simpleMenuItem.setSelected(false);
 	        	minimaxMenuItem.setSelected(false);
@@ -86,6 +87,7 @@ public class WindowGame extends Scene  {
 	    });
 	    randomMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
+	        	// Deselectionne les autres menus (impossible d'en avoir deux en mm tps)
 	        	playerMenuItem.setSelected(false);
 	        	simpleMenuItem.setSelected(false);
 	        	minimaxMenuItem.setSelected(false);
@@ -94,6 +96,7 @@ public class WindowGame extends Scene  {
 	    });
 	    minimaxMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
+	        	// Deselectionne les autres menus (impossible d'en avoir deux en mm tps)
 	        	playerMenuItem.setSelected(false);
 	        	randomMenuItem.setSelected(false);
 	        	simpleMenuItem.setSelected(false);
@@ -102,6 +105,7 @@ public class WindowGame extends Scene  {
 	    });
 	    simpleMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
+	        	// Deselectionne les autres menus (impossible d'en avoir deux en mm tps)
 	        	playerMenuItem.setSelected(false);
 	        	randomMenuItem.setSelected(false);
 	        	minimaxMenuItem.setSelected(false);
@@ -120,6 +124,7 @@ public class WindowGame extends Scene  {
 	    /* Fonctions pour les boutons */
 	    player2MenuItem.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
+	        	// Deselectionne les autres menus (impossible d'en avoir deux en mm tps)
 	        	random2MenuItem.setSelected(false);
 	        	simple2MenuItem.setSelected(false);
 	        	minimax2MenuItem.setSelected(false);
@@ -128,6 +133,7 @@ public class WindowGame extends Scene  {
 	    });
 	    random2MenuItem.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
+	        	// Deselectionne les autres menus (impossible d'en avoir deux en mm tps)
 	        	player2MenuItem.setSelected(false);
 	        	simple2MenuItem.setSelected(false);
 	        	minimax2MenuItem.setSelected(false);
@@ -136,6 +142,7 @@ public class WindowGame extends Scene  {
 	    });
 	    minimax2MenuItem.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
+	        	// Deselectionne les autres menus (impossible d'en avoir deux en mm tps)
 	        	player2MenuItem.setSelected(false);
 	        	random2MenuItem.setSelected(false);
 	        	simple2MenuItem.setSelected(false);
@@ -144,6 +151,7 @@ public class WindowGame extends Scene  {
 	    });
 	    simple2MenuItem.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
+	        	// Deselectionne les autres menus (impossible d'en avoir deux en mm tps)
 	        	player2MenuItem.setSelected(false);
 	        	random2MenuItem.setSelected(false);
 	        	minimax2MenuItem.setSelected(false);
@@ -152,7 +160,15 @@ public class WindowGame extends Scene  {
 	    });
 	    p2Menu.getItems().addAll(player2MenuItem, random2MenuItem, simple2MenuItem, minimax2MenuItem);
 	    
-	    menuBar.getMenus().addAll(fileMenu,p1Menu,p2Menu);
+	    Menu playpauseMenu = new Menu("Play/Pause");
+	    MenuItem playpauseMenuItem = new MenuItem("Play/pause");
+	    playpauseMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	        	// do something
+	        }
+	    });
+	    playpauseMenu.getItems().add(playpauseMenuItem);
+	    menuBar.getMenus().addAll(fileMenu,p1Menu,p2Menu,playpauseMenu);
 	    /* fin Menu */
 		
 		board = new Board(this);
