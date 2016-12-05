@@ -59,6 +59,8 @@ public class WindowGame extends Scene  {
 	    MenuItem resetMenuItem = new MenuItem("Reset");
 	    MenuItem exitMenuItem = new MenuItem("Exit");
 	    /* Fonctions pour les boutons */
+	    
+	  
 	    resetMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
 	            System.out.println("reset");
@@ -164,6 +166,7 @@ public class WindowGame extends Scene  {
 	    MenuItem playpauseMenuItem = new MenuItem("Play/pause");
 	    playpauseMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
+	        	System.out.println("Play/pause");
 	        	// do something
 	        }
 	    });
@@ -228,7 +231,7 @@ public class WindowGame extends Scene  {
 	}
 	
 	public void selectColumnAction(int c){
-		this.getApp().insertChip(c);
+		this.getApp().playHumain(c);
 	}
 
 }

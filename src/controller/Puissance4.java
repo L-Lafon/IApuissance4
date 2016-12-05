@@ -25,7 +25,7 @@ import view.WindowGame;
 
 public class Puissance4 extends Application {
 	
-	public static boolean STAT_ANALYSE_ON = false;
+	public static boolean STAT_ANALYSE_ON = true;
 	
 	private Stage stage;
 		
@@ -184,7 +184,7 @@ public class Puissance4 extends Application {
 	}
 	
 	public void statAnalyseOn(){
-		File f = new File("ia_prof2_iaprof6.txt");
+		File f = new File("ia_prof4_iaprof6.txt");
 		try{
 		FileWriter fw = new FileWriter(f,true);
 		
@@ -262,6 +262,10 @@ public class Puissance4 extends Application {
 
 	}
 
+	public void playHumain(int c){
+		if(this.game.getCurrentPlayer().getTypeIA() == 0)
+			insertChip(c);
+	}
 	
 	public void playIA(Position p){
 		if(p != null)		
@@ -269,6 +273,8 @@ public class Puissance4 extends Application {
 		else
 			System.out.println("IA NE SAIT PLUS QUOI FAIRE");
 	}
+	
+	
 	
 	public boolean existsAlignment(){
 		String state = game.grid.getStateLines();
