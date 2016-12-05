@@ -25,7 +25,7 @@ public class Game {
 		
 		players = new Player[2];
 		players[0] = new Player(1,Color.YELLOW, "Joueur 1","0");
-		players[0].setIA(0);
+		players[0].setIA(3);
 	
 		players[1] = new Player(2,Color.RED, "Joueur 2","X");
 		players[1].setIA(3);

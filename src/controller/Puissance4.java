@@ -33,6 +33,8 @@ public class Puissance4 extends Application {
 	
 	public WindowGame windowGame;
 	
+	public int[] histo;
+	
 	public static void main(String[] args) {
 		System.out.println("-- Lancement application --");
 		
@@ -71,7 +73,6 @@ public class Puissance4 extends Application {
 		//...
 		game = new Game();
 		
-		
 		// DÃ©claration des fenÃªtres		
 		
 		windowGame = new WindowGame(this);	
@@ -101,6 +102,8 @@ public class Puissance4 extends Application {
 	public void initGame(){
 		this.fixPlayer(0);
 		game.reset();
+
+		this.histo = new int[42];
 		
 		// Si c'est Ã  l'IA de jouer, elle va jouer, sinon rien faire
 		nextRound();
@@ -118,6 +121,9 @@ public class Puissance4 extends Application {
 		int line;
 		
 		if(!game.gameOver() && !grid.isColumnFull(column)){
+			// stocke le numéro de la colonne, column, à chaque tour {0,...,6}
+			this.histo[grid.getnbChips()] = column;
+			System.out.println(this.histo[grid.getnbChips()]);
 			
 			line = grid.add(column, new Chip(game.getCurrentPlayer()));
 			

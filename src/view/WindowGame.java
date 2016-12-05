@@ -161,13 +161,13 @@ public class WindowGame extends Scene  {
 	    p2Menu.getItems().addAll(player2MenuItem, random2MenuItem, simple2MenuItem, minimax2MenuItem);
 	    
 	    Menu playpauseMenu = new Menu("Play/Pause");
-	    MenuItem playpauseMenuItem = new MenuItem("Play/pause");
-	    playpauseMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+	    //MenuItem playpauseMenuItem = new MenuItem("Play/pause");
+	    playpauseMenu.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
-	        	// do something
+	        	System.out.println("Play/Pause");
 	        }
 	    });
-	    playpauseMenu.getItems().add(playpauseMenuItem);
+	    //playpauseMenu.getItems().add(playpauseMenuItem);
 	    menuBar.getMenus().addAll(fileMenu,p1Menu,p2Menu,playpauseMenu);
 	    /* fin Menu */
 		
