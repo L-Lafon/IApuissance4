@@ -3,6 +3,7 @@ package view;
 import java.io.IOException;
 
 import controller.Puissance4;
+import ia.IA;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -31,6 +32,9 @@ public class WindowGame extends Scene  {
 	Board board = null;;
 	BorderPane layout;
 	
+	
+	CheckMenuItem[][] playerMenuItem;
+	
 	 
 	
 	public WindowGame(Puissance4 app) throws IOException {
@@ -55,7 +59,7 @@ public class WindowGame extends Scene  {
 	    // vient de public void start(Stage primaryStage) {
 		layout.setTop(menuBar);
 		
-		Menu fileMenu = new Menu("File");
+		Menu fileMenu = new Menu("Game");
 	    MenuItem resetMenuItem = new MenuItem("Reset");
 	    MenuItem exitMenuItem = new MenuItem("Exit");
 	    /* Fonctions pour les boutons */
@@ -71,107 +75,48 @@ public class WindowGame extends Scene  {
 	    
 	    fileMenu.getItems().addAll(resetMenuItem, new SeparatorMenuItem(), exitMenuItem);
 	    
-	    Menu p1Menu = new Menu("Player 1");
-	    CheckMenuItem playerMenuItem = new CheckMenuItem("Player");
-	    CheckMenuItem randomMenuItem = new CheckMenuItem("Random AI");
-	    CheckMenuItem simpleMenuItem = new CheckMenuItem("Simple AI");
-	    CheckMenuItem minimaxMenuItem = new CheckMenuItem("Minimax AI");
-	    playerMenuItem.setSelected(true);
-	    /* Fonctions pour les boutons */
-	    playerMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-	        @Override public void handle(ActionEvent e) {
-	        	// Deselectionne les autres menus (impossible d'en avoir deux en mm tps)
-	        	randomMenuItem.setSelected(false);
-	        	simpleMenuItem.setSelected(false);
-	        	minimaxMenuItem.setSelected(false);
-				//players[1].setIA(1);
-	        }
-	    });
-	    randomMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-	        @Override public void handle(ActionEvent e) {
-	        	// Deselectionne les autres menus (impossible d'en avoir deux en mm tps)
-	        	playerMenuItem.setSelected(false);
-	        	simpleMenuItem.setSelected(false);
-	        	minimaxMenuItem.setSelected(false);
-				//players[1].setIA(1);
-	        }
-	    });
-	    minimaxMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-	        @Override public void handle(ActionEvent e) {
-	        	// Deselectionne les autres menus (impossible d'en avoir deux en mm tps)
-	        	playerMenuItem.setSelected(false);
-	        	randomMenuItem.setSelected(false);
-	        	simpleMenuItem.setSelected(false);
-	            //players[1].setIA(2);
-	        }
-	    });
-	    simpleMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-	        @Override public void handle(ActionEvent e) {
-	        	// Deselectionne les autres menus (impossible d'en avoir deux en mm tps)
-	        	playerMenuItem.setSelected(false);
-	        	randomMenuItem.setSelected(false);
-	        	minimaxMenuItem.setSelected(false);
-	        	//players[1].setIA(3);
-	        }
-	    });
-	    p1Menu.getItems().addAll(playerMenuItem, randomMenuItem, simpleMenuItem, minimaxMenuItem);
+	    Menu[] playerXMenu = { new Menu("Player 1") , new Menu("Player 2") };
+	    
+	    String[] typesIA = IA.getTypes();
+	    playerMenuItem = new CheckMenuItem[2][typesIA.length];
+	    
+	    for(int j=0; j<2;j++){
+	    	final int j_id = j;
+		    for(int i=0; i<typesIA.length; i++){
+		    	playerMenuItem[j][i] = new CheckMenuItem(typesIA[i]);
+		    	final int iaId = i;
+		    	
+		    	playerMenuItem[j][i].setOnAction(new EventHandler<ActionEvent>() {
+			        @Override public void handle(ActionEvent e) {
+			        	System.out.println("Choix de l'IA pour j"+j_id+": "+iaId);
+			        	
+			        	selectMenuTypeIA(j_id, iaId);
+			        	
+			        	
+			        }
+			    });
+		    	
+		    	playerXMenu[j].getItems().add(playerMenuItem[j][i]);
+		    	
+		    }
+	    }
+	   
 	    
 	    
-	    Menu p2Menu = new Menu("Player 2");
-	    CheckMenuItem player2MenuItem = new CheckMenuItem("Player");
-	    CheckMenuItem random2MenuItem = new CheckMenuItem("Random AI");
-	    CheckMenuItem simple2MenuItem = new CheckMenuItem("Simple AI");
-	    CheckMenuItem minimax2MenuItem = new CheckMenuItem("Minimax AI");
-	    random2MenuItem.setSelected(true);
-	    /* Fonctions pour les boutons */
-	    player2MenuItem.setOnAction(new EventHandler<ActionEvent>() {
-	        @Override public void handle(ActionEvent e) {
-	        	// Deselectionne les autres menus (impossible d'en avoir deux en mm tps)
-	        	random2MenuItem.setSelected(false);
-	        	simple2MenuItem.setSelected(false);
-	        	minimax2MenuItem.setSelected(false);
-				//players[1].setIA(1);
-	        }
-	    });
-	    random2MenuItem.setOnAction(new EventHandler<ActionEvent>() {
-	        @Override public void handle(ActionEvent e) {
-	        	// Deselectionne les autres menus (impossible d'en avoir deux en mm tps)
-	        	player2MenuItem.setSelected(false);
-	        	simple2MenuItem.setSelected(false);
-	        	minimax2MenuItem.setSelected(false);
-				//players[1].setIA(1);
-	        }
-	    });
-	    minimax2MenuItem.setOnAction(new EventHandler<ActionEvent>() {
-	        @Override public void handle(ActionEvent e) {
-	        	// Deselectionne les autres menus (impossible d'en avoir deux en mm tps)
-	        	player2MenuItem.setSelected(false);
-	        	random2MenuItem.setSelected(false);
-	        	simple2MenuItem.setSelected(false);
-	            //players[1].setIA(2);
-	        }
-	    });
-	    simple2MenuItem.setOnAction(new EventHandler<ActionEvent>() {
-	        @Override public void handle(ActionEvent e) {
-	        	// Deselectionne les autres menus (impossible d'en avoir deux en mm tps)
-	        	player2MenuItem.setSelected(false);
-	        	random2MenuItem.setSelected(false);
-	        	minimax2MenuItem.setSelected(false);
-	        	//players[1].setIA(3);
-	        }
-	    });
-	    p2Menu.getItems().addAll(player2MenuItem, random2MenuItem, simple2MenuItem, minimax2MenuItem);
 	    
-	    Menu playpauseMenu = new Menu("Play/Pause");
-	    MenuItem playpauseMenuItem = new MenuItem("Play/pause");
-	    playpauseMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+	    
+	   /* Menu playpauseMenu = new Menu("Play/Pause");
+	    //MenuItem playpauseMenuItem = new MenuItem("Play/pause");
+	    playpauseMenu.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
+
 	        	System.out.println("Play/pause");
 	        	// do something
+
 	        }
-	    });
-	    playpauseMenu.getItems().add(playpauseMenuItem);
-	    menuBar.getMenus().addAll(fileMenu,p1Menu,p2Menu,playpauseMenu);
+	    });*/
+	    //playpauseMenu.getItems().add(playpauseMenuItem);
+	    menuBar.getMenus().addAll(fileMenu,playerXMenu[0],playerXMenu[1]/*,playpauseMenu*/);
 	    /* fin Menu */
 		
 		board = new Board(this);
@@ -179,13 +124,13 @@ public class WindowGame extends Scene  {
 		
 
 		
-		System.out.println(layout.getCenter());
+		//System.out.println(layout.getCenter());
 		//System.out.println("Window:"+stage.getWidth());
 		
 		this.setRoot(layout);
 		
 		
-		System.out.println(layout.getCenter());
+		//System.out.println(layout.getCenter());
 		
 		
 		
@@ -206,19 +151,34 @@ public class WindowGame extends Scene  {
 		 
 	}
 	
-	public void constructLayout(){
-		
-	}
+	
+	
 	
 	public Puissance4 getApp(){
 		return this.app;
 	}
 	
 	public void update(Color [][] data, int lines, int columns){		
-		System.out.println(lines+"-"+columns);
+		
 		board.update(data,lines,columns);	
 		
 		//System.out.println("Mise à jour de la vue effectuée");
+	}
+	
+	public void selectMenuTypeIA(int pId, int tIA){
+		app.setTypeIA(pId,tIA);
+	}
+	
+	public void updateMenuIA(int ia1_choice, int ia2_choice){
+		String[] typesIA = IA.getTypes();
+		for(int i=0; i < typesIA.length; i++){
+			
+			playerMenuItem[0][i].setSelected(ia1_choice == i);
+			playerMenuItem[1][i].setSelected(ia2_choice == i);
+			
+			
+			
+		}
 	}
 	
 	 

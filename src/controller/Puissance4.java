@@ -25,13 +25,16 @@ import view.WindowGame;
 
 public class Puissance4 extends Application {
 	
-	public static boolean STAT_ANALYSE_ON = true;
+	public static boolean STAT_ANALYSE_ON = false;
+	
 	
 	private Stage stage;
 		
 	public Game game;
 	
 	public WindowGame windowGame;
+	
+	public int[] histo;
 	
 	public static void main(String[] args) {
 		System.out.println("-- Lancement application --");
@@ -72,6 +75,10 @@ public class Puissance4 extends Application {
 		game = new Game();
 		
 		
+		
+		
+		
+		
 		// Déclaration des fenêtres		
 		
 		windowGame = new WindowGame(this);	
@@ -85,7 +92,7 @@ public class Puissance4 extends Application {
 		stage.show();
 		
 		
-		this.updateView();
+		resetGame();
 		
 	}
 	
@@ -101,6 +108,8 @@ public class Puissance4 extends Application {
 	public void initGame(){
 		this.fixPlayer(0);
 		game.reset();
+
+		this.histo = new int[42];
 		
 		// Si c'est à l'IA de jouer, elle va jouer, sinon rien faire
 		nextRound();
@@ -111,6 +120,7 @@ public class Puissance4 extends Application {
 		
 		//game=new Game();
 		this.updateView();
+		this.updateViewIA();
 	}
 	
 	public void insertChip(int column){
@@ -118,6 +128,9 @@ public class Puissance4 extends Application {
 		int line;
 		
 		if(!game.gameOver() && !grid.isColumnFull(column)){
+			// stocke le num�ro de la colonne, column, � chaque tour {0,...,6}
+			this.histo[grid.getnbChips()] = column;
+			//System.out.println(this.histo[grid.getnbChips()]);
 			
 			line = grid.add(column, new Chip(game.getCurrentPlayer()));
 			
@@ -143,6 +156,7 @@ public class Puissance4 extends Application {
 			
 			
 			this.updateView();
+			this.updateViewIA();
 	
 			
 			
@@ -184,7 +198,7 @@ public class Puissance4 extends Application {
 	}
 	
 	public void statAnalyseOn(){
-		File f = new File("ia_prof4_iaprof6.txt");
+		/*File f = new File("ia_random__random.txt");
 		try{
 		FileWriter fw = new FileWriter(f,true);
 		
@@ -195,12 +209,20 @@ public class Puissance4 extends Application {
 		catch(Exception e){
 			
 		}
+		*/
+		int playerWinner = (game.grid.isFull()) ? 0 : game.getWinner().getId();
+		Stat.add(game.grid.getnbChips(), playerWinner);
+		Stat.showResults();
 		
 		this.resetGame();
+		
 	}
 	
 	public void searchIA(){		
 		
+		// Si ce ne sont pas 2 IA qui jouent, on indique que l'ordinateur est en train de calculer
+		if(!(game.getCurrentPlayer().isIA() && game.getOpponentPlayer().isIA()))
+			windowGame.setIndication(""+game.getCurrentPlayer().getName()+" réfléchit...");
 		
 		Thread threadIA = new Thread(Integer.toString(game.currentGameId)) {
 			
@@ -217,7 +239,10 @@ public class Puissance4 extends Application {
 					ia = new IARandom(typeIA,game.getGrid());					
 					
 				}
-				if(typeIA == IA.IA_MINMAX_H1 || typeIA == IA.IA_MINMAX_H2){
+				if(typeIA == IA.IA_MINMAX_H1_1 ||
+						typeIA == IA.IA_MINMAX_H1_2||
+						typeIA == IA.IA_MINMAX_H2_1 ||
+						typeIA == IA.IA_MINMAX_H2_2){
 								
 					ia = new IAMinMax(typeIA, game.getGrid(), game.getCurrentPlayer(), game.getOpponentPlayer());
 					
@@ -274,6 +299,13 @@ public class Puissance4 extends Application {
 			System.out.println("IA NE SAIT PLUS QUOI FAIRE");
 	}
 	
+	public void setTypeIA(int pId, int tIA){
+		Player[] players = game.getPlayers();
+		players[pId].setIA(tIA);
+		nextRound();
+		updateViewIA();
+	}
+	
 	
 	
 	public boolean existsAlignment(){
@@ -287,7 +319,16 @@ public class Puissance4 extends Application {
 		Grid grid = game.getGrid();
 		//System.out.println("Mise à jour de la vue demandée par le moteur");
 		windowGame.update(grid.getDataView(),grid.nbLines, grid.nbColumns);
+		
+		
 	}
+	
+	public void updateViewIA(){
+		Player[] players = game.getPlayers();
+		windowGame.updateMenuIA(players[0].getTypeIA(), players[1].getTypeIA());
+	}
+	
+	
 	
 	
 	

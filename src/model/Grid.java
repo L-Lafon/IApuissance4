@@ -61,18 +61,38 @@ public class Grid {
 	
 	// Retour l'id de la ligne où le jeton a été déposé
 	public int add(int c, Chip p){
-		int l;
-		for(l=0; l<this.nbLines && !isCaseFree(l,c); l++);
-		//System.out.println("Ajout en colonne "+c+" et ligne num "+l);
-		this.add(l,c, p);
-		return l;
+		int line=0;;
+		int l=0;
+		
+		while(l<this.nbLines ){
+			if(isCaseFree(l,c)){				
+				line=l;
+				break;				
+			}
+			
+			l++;
+		}
+		
+		this.add(line,c, p);
+		return line;
+			
+		
+		
+		
 	}
 	
 	
 	
-	// Pour l'ia plus tard
+	// 
 	public void add(int l, int c, Chip p){
+		
+		try{
 		this.chips[l][c] = p;
+		}
+		catch(Exception e){
+			System.err.println("ERREUR :"+e+" "+l+"-"+c);
+		}
+		
 		nbChips++;
 	}
 	public void remove(int l, int c){

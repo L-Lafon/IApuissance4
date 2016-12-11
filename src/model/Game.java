@@ -26,11 +26,13 @@ public class Game {
 		
 		
 		players = new Player[2];
+		
 		players[0] = new Player(1,Color.YELLOW, "Joueur 1","0");
-		players[0].setIA(2);
+		players[0].setIA(0);
+
 	
 		players[1] = new Player(2,Color.RED, "Joueur 2","X");
-		players[1].setIA(2);
+		players[1].setIA(4);
 		
 		
 		this.reset();
@@ -59,6 +61,10 @@ public class Game {
 	
 	public Player getOpponentPlayer(){
 		return players[  getIndexCurrentPlayer() == 1 ? 0 : 1  ];
+	}
+	
+	public Player[] getPlayers(){
+		return players;
 	}
 	
 	public Player getWinner(){

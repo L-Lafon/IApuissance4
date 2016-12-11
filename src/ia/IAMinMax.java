@@ -1,8 +1,10 @@
 package ia;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,70 +22,93 @@ public class IAMinMax extends IA{
 	
 	public Position play(){
 		
+		int depth;
+		
+		switch(typeIA){
+			case IA.IA_MINMAX_H1_1 : depth = 4; break;
+			case IA.IA_MINMAX_H1_2 : depth = 6; break;
+			case IA.IA_MINMAX_H2_1 : depth = 4; break;
+			case IA.IA_MINMAX_H2_2 : depth = 6; break;
+			default: depth=4; break;
+		}
+		
 		Integer alpha = Integer.MIN_VALUE, beta = Integer.MAX_VALUE;
 		
 		int val_max = Integer.MIN_VALUE;
-		int col_max=0;;
+		int cols_score[]= new int[grid.nbColumns];
 		int val=Integer.MIN_VALUE;;
 		
-		int i;
+		
+		for(int i=0; i<cols_score.length;i++)
+			cols_score[i]=Integer.MIN_VALUE;
+		
 		int line;
 		
-		for(i=0; i<grid.nbColumns; i++){
-			if(!grid.isColumnFull(i)){
-				// Simulation du coup				
-				line = grid.add(i, new Chip(this.playerIA));				
+		for(int i : getPossibleColumns()){
+			
+			// Simulation du coup				
+			line = grid.add(i, new Chip(this.playerIA));				
+			
+							
+			val = this.min(new Position(line, i),grid,depth,alpha,beta);	
+			
+			
+			
+			if(val > val_max){				
+				val_max = val;			
+			}
+			
+			cols_score[i] = val;;
+			
+			// Annulation du coup joué
+			grid.remove(line, i);
 				
-				if(this.playerIA.getId()==1)
-					val = this.min(new Position(line, i),grid,4,alpha,beta);				
-				else
-					val = this.min(new Position(line, i),grid,6,alpha,beta);				
-				
-				if((val == val_max && new Random().nextBoolean()) || val > val_max){
 					
-					val_max = val;
-					col_max = i;
-				}
-				
-				// Annulation du coup joué
-				grid.remove(line, i);
-				
-			}			
 		}	
 		
-		return new Position(-1, col_max);
+		int col_max=0;
+		ArrayList<Integer> bestColumns = new ArrayList<Integer>();
+		for(int i=0; i<cols_score.length;i++){
+			if(cols_score[i] == val_max)
+				bestColumns.add(i);
+		}
+		
+		
+		
+		
+		return new Position(-1, getRandomInPossible(bestColumns));
 	}
 	
 	public int min(Position posPlayed,Grid currentGrid, int depth, int alpha, int beta){
+		
 		if(depth == 0 || this.gameOver())
-			return 1 * this.eval(posPlayed,currentGrid);
+			return this.eval(posPlayed,currentGrid);
 		
 		int val_min = Integer.MAX_VALUE;
 		int val;
-		int i;
+		
 		int line;
 		
-		for(i=0; i<grid.nbColumns; i++){
-			if(!currentGrid.isColumnFull(i)){
-				// Simulation du coup
-				line = currentGrid.add(i, new Chip(playerOpponent));
-				val = this.max(new Position(line,i),currentGrid,depth-1,alpha,beta);
+		for(int i : getPossibleColumns()){
+			
+			// Simulation du coup
+			line = currentGrid.add(i, new Chip(playerOpponent));
+			val = this.max(new Position(line,i),currentGrid,depth-1,alpha,beta);
+			
+			if(val <= val_min){
+				val_min = val;					
+			}		
+			
+			
+			// Annulation du coup joué
+			currentGrid.remove(line, i);
+			
+			if(alpha >= val) // élagage
+				return val;
+			
+			beta = Math.min(beta,val); 
 				
-				if((val == val_min && new Random().nextBoolean()) || val < val_min){
-					val_min = val;					
-				}
-				
-				
-				
-				// Annulation du coup joué
-				currentGrid.remove(line, i);
-				
-				if(alpha >= val) // élagage
-					return val;
-				
-				beta = Math.min(beta,val); 
-				
-			}			
+						
 		}
 		
 		return val_min;
@@ -97,29 +122,31 @@ public class IAMinMax extends IA{
 		
 		int val_max = Integer.MIN_VALUE;
 		int val;
-		int i;
+		
 		int line;
 		
-		for(i=0; i<grid.nbColumns; i++){
-			if(!currentGrid.isColumnFull(i)){
-				// Simulation du coup
-				line = currentGrid.add(i, new Chip(this.playerIA));
-				val = this.min(new Position(line,i),currentGrid,depth-1,alpha,beta);
-				
-				if((val == val_max && new Random().nextBoolean()) || val > val_max){
-					val_max = val;					
-				}
-				
-								
-				// Annulation du coup joué
-				currentGrid.remove(line, i);
-				
-				if(val >= beta)  // élagage 
-					return val;
-				
-				alpha = Math.max(alpha,val);
-				
+		for(int i : getPossibleColumns()){
+			
+			
+			// Simulation du coup
+			line = currentGrid.add(i, new Chip(this.playerIA));
+			val = this.min(new Position(line,i),currentGrid,depth-1,alpha,beta);
+			
+			if(val >= val_max){
+				val_max = val;					
 			}			
+			
+			
+							
+			// Annulation du coup joué
+			currentGrid.remove(line, i);
+			
+			if(val >= beta)  // élagage 
+				return val;
+			
+			alpha = Math.max(alpha,val);
+				
+						
 		}
 		
 		return val_max;
@@ -128,16 +155,18 @@ public class IAMinMax extends IA{
 	}
 	
 	public int eval(Position posPlayed, Grid currentGrid){
-		if(typeIA == IA.IA_MINMAX_H1)
-			return evalH1(posPlayed,currentGrid);
+		if(typeIA == IA.IA_MINMAX_H2_1 || typeIA == IA.IA_MINMAX_H2_2)
+			return evalH2(posPlayed,currentGrid);
 		
 		else
-			return evalH2(posPlayed, currentGrid);
+			return evalH1(posPlayed, currentGrid);
 	}
 	
 	
 	
-	public int evalH1(Position posPlayed,Grid currentGrid){
+	public int evalH2(Position posPlayed,Grid currentGrid){
+		
+		
 		
 	
 		int scoreIA = 0;
@@ -230,7 +259,7 @@ public class IAMinMax extends IA{
 	}
 	
 	
-	public int evalH2(Position posPlayed,Grid currentGrid){
+	public int evalH1(Position posPlayed,Grid currentGrid){
 		
 		Pattern pattern;
 		Matcher matcher;
@@ -265,54 +294,7 @@ public class IAMinMax extends IA{
 	
 	}
 	
-	public int evalH3(Position posPlayed,Grid currentGrid){
-		
-		int scoreCurr=0, qualityOpp=0;
-		
-		/*
-		String fullyState = currentGrid.getStateLines();
-		
-		Pattern pattern, pattern2;
-		Matcher matcher, matcher2;
-		
-		
-		pattern = Pattern.compile("[X]{1}[_]{3,}|[X]{2}[_]{2,}|[X]{3}[_]{1,}");
-	    matcher = pattern.matcher(fullyState);
-	    while(matcher.find()) {		    
-	    	if(matcher.group().length() >= 4)
-				qualityCurr+=1000;
-			else{
-				qualityCurr+= matcher.group().length()*10;
-			} 
-	    }
-		*/
-		/*if(playerIA.getId()==1){
-			Pattern pattern = Pattern.compile("[X]+");
-		    Matcher matcher = pattern.matcher(fullyState);
-		    while(matcher.find()) {		    
-		    	if(matcher.group().length() >= 4)
-					qualityCurr+=1000;
-				else
-					qualityCurr+= matcher.group().length()*10;
-		    }
-		}
-		
-		else{
-			Pattern pattern = Pattern.compile("[0]+");
-		    Matcher matcher = pattern.matcher(fullyState);
-		    while(matcher.find()) {		    	
-		    	if(matcher.group().length() >= 4)
-					qualityOpp+=1000;
-				else
-					qualityOpp+= matcher.group().length()*10;
-		    }
-		}
-		*/
-		
-		return( scoreCurr - qualityOpp );
-		
-		
-	}
+	
 	
 	
 	
