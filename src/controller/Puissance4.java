@@ -128,9 +128,11 @@ public class Puissance4 extends Application {
 		int line;
 		
 		if(!game.gameOver() && !grid.isColumnFull(column)){
+
 			// stocke le num�ro de la colonne, column, � chaque tour {0,...,6}
-			this.histo[grid.getnbChips()] = column;
+			this.histo[grid.getnbChips()] = column+1;
 			//System.out.println(this.histo[grid.getnbChips()]);
+
 			
 			line = grid.add(column, new Chip(game.getCurrentPlayer()));
 			
@@ -163,6 +165,7 @@ public class Puissance4 extends Application {
 			this.nextRound();
 		
 		}
+		
 	}
 	
 	public void fixPlayer(int index){
@@ -323,6 +326,7 @@ public class Puissance4 extends Application {
 		
 	}
 	
+
 	public void updateViewIA(){
 		Player[] players = game.getPlayers();
 		windowGame.updateMenuIA(players[0].getTypeIA(), players[1].getTypeIA());
@@ -331,5 +335,14 @@ public class Puissance4 extends Application {
 	
 	
 	
+
+	public String getStrHistoCoups() {
+		String s = "";
+		for (int i=0; i<42; i++){
+			s+= this.histo[i]+", ";
+		}
+		return s;
+	}
+
 	
 }

@@ -61,6 +61,7 @@ public class WindowGame extends Scene  {
 		
 		Menu fileMenu = new Menu("Game");
 	    MenuItem resetMenuItem = new MenuItem("Reset");
+	    MenuItem histoMenuItem = new MenuItem("Historique");
 	    MenuItem exitMenuItem = new MenuItem("Exit");
 	    /* Fonctions pour les boutons */
 	    
@@ -71,9 +72,15 @@ public class WindowGame extends Scene  {
 	            app.initGame();
 	        }
 	    });
+	    histoMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override public void handle(ActionEvent e) {
+	            System.out.println(app.getStrHistoCoups());
+	            
+	        }
+	    });
 	    exitMenuItem.setOnAction(actionEvent -> Platform.exit());
 	    
-	    fileMenu.getItems().addAll(resetMenuItem, new SeparatorMenuItem(), exitMenuItem);
+	    fileMenu.getItems().addAll(resetMenuItem, histoMenuItem, new SeparatorMenuItem(), exitMenuItem);
 	    
 	    Menu[] playerXMenu = { new Menu("Player 1") , new Menu("Player 2") };
 	    
