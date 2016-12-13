@@ -36,6 +36,8 @@ public class Puissance4 extends Application {
 	
 	public int[] histo;
 	
+	Thread threadIA;
+	
 	public static void main(String[] args) {
 		System.out.println("-- Lancement application --");
 		
@@ -131,22 +133,15 @@ public class Puissance4 extends Application {
 
 			// stocke le num�ro de la colonne, column, � chaque tour {0,...,6}
 			this.histo[grid.getnbChips()] = column+1;
-			//System.out.println(this.histo[grid.getnbChips()]);
+			
 
 			
 			line = grid.add(column, new Chip(game.getCurrentPlayer()));
 			
 			// Vérification si pions alignés par rapport au dernier pion déposé
-			//int winner;
-			if(existsAlignment()){
-				//this.winner=this.pions[line][column].getPlayer();
-				game.setWinner(game.getCurrentPlayer());
-				//windowGame.setIndication("Victoire de "+game.getCurrentPlayer().getName()+"");
-				
-				
-				
-				//System.out.println("Victoire de "+game.getWinner());
-				
+			
+			if(existsAlignment()){				
+				game.setWinner(game.getCurrentPlayer());				
 			}
 			else{
 			
@@ -201,18 +196,7 @@ public class Puissance4 extends Application {
 	}
 	
 	public void statAnalyseOn(){
-		/*File f = new File("ia_random__random.txt");
-		try{
-		FileWriter fw = new FileWriter(f,true);
 		
-		int playerWinner = (game.grid.isFull()) ? 0 : game.getWinner().getId();
-		fw.write(""+game.grid.getnbChips()+";"+playerWinner+"\r\n");
-		fw.close();
-		}
-		catch(Exception e){
-			
-		}
-		*/
 		int playerWinner = (game.grid.isFull()) ? 0 : game.getWinner().getId();
 		Stat.add(game.grid.getnbChips(), playerWinner);
 		Stat.showResults();
@@ -223,11 +207,12 @@ public class Puissance4 extends Application {
 	
 	public void searchIA(){		
 		
+		
 		// Si ce ne sont pas 2 IA qui jouent, on indique que l'ordinateur est en train de calculer
 		if(!(game.getCurrentPlayer().isIA() && game.getOpponentPlayer().isIA()))
 			windowGame.setIndication(""+game.getCurrentPlayer().getName()+" réfléchit...");
 		
-		Thread threadIA = new Thread(Integer.toString(game.currentGameId)) {
+		threadIA = new Thread(Integer.toString(game.currentGameId)) {
 			
 			Position p=null;;
 			long timeExecution;
@@ -256,7 +241,7 @@ public class Puissance4 extends Application {
 				
 				p = ia.play();
 				timeExecution = ia.getTimeSearch();
-				int timeToSleep = -3000 - (int)(timeExecution/1000);
+				int timeToSleep = -2000 - (int)(timeExecution/1000);
 				
 				try{
 					Thread.sleep(timeToSleep);
@@ -281,7 +266,6 @@ public class Puissance4 extends Application {
 		};
 		
 		threadIA.start();
-		
 		
 		
 		
@@ -320,8 +304,11 @@ public class Puissance4 extends Application {
 	
 	public void updateView(){
 		Grid grid = game.getGrid();
+		
 		//System.out.println("Mise à jour de la vue demandée par le moteur");
 		windowGame.update(grid.getDataView(),grid.nbLines, grid.nbColumns);
+		
+		System.out.println(game.getGrid().getStateLines());
 		
 		
 	}

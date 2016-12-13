@@ -16,6 +16,8 @@ import model.QualityMove;
 
 public class IAMinMax extends IA{
 	
+	boolean elagage = false;
+	
 	public IAMinMax(int typeIA,Grid grid, Player pIA, Player pOpp){
 		super(typeIA,grid,pIA,pOpp);
 	}
@@ -103,7 +105,7 @@ public class IAMinMax extends IA{
 			// Annulation du coup joué
 			currentGrid.remove(line, i);
 			
-			if(alpha >= val) // élagage
+			if(elagage && alpha >= val) // élagage
 				return val;
 			
 			beta = Math.min(beta,val); 
@@ -141,7 +143,7 @@ public class IAMinMax extends IA{
 			// Annulation du coup joué
 			currentGrid.remove(line, i);
 			
-			if(val >= beta)  // élagage 
+			if(elagage && val >= beta)  // élagage 
 				return val;
 			
 			alpha = Math.max(alpha,val);
@@ -164,9 +166,7 @@ public class IAMinMax extends IA{
 	
 	
 	
-	public int evalH2(Position posPlayed,Grid currentGrid){
-		
-		
+	public int evalH2(Position posPlayed,Grid currentGrid){		
 		
 	
 		int scoreIA = 0;
@@ -198,10 +198,10 @@ public class IAMinMax extends IA{
 		weight.put("____", 1);
 	
 		// Défenses
-		weight.put("2212", 50);
+		/*weight.put("2212", 50);
 		weight.put("2122", 50);
 		weight.put("2221", 50);
-		weight.put("1222", 50);
+		weight.put("1222", 50);*/
 		
 		String currentPattern="";
 		String pIAPattern="";
@@ -241,20 +241,12 @@ public class IAMinMax extends IA{
 		    	scoreOpp+= currentWeight;
 		    }		    
 		   
-		}
+		}	
 		
 		
 		
 		
-		//System.out.println("Conf testée "+posPlayed+" - j"+pCurr.getId()+"  - score : "+scoreIA+" - "+scoreOpp+" = "+(scoreIA - scoreOpp)+" ");
-		
-		
-		return( scoreIA - scoreOpp );
-			
-		//currentGrid.showDebug();
-		//grid.showDebug();
-		//System.out.println("_________");	
-		
+		return( scoreIA - scoreOpp );		
 		
 	}
 	
@@ -281,16 +273,11 @@ public class IAMinMax extends IA{
 				if(player == playerIA)
 					scoreIA += scoreTmp;				
 				else
-					scoreOpp += scoreTmp;
-				
-				//System.out.println(player.getId()+"-["+sym+"]{4} - scoreIA"+scoreIA+"  - "+stateGrid);
+					scoreOpp += scoreTmp;				
 			}
-		}
-		
-		//System.out.println(scoreIA+" - "+scoreOpp);
-		return scoreIA - scoreOpp;
-		
+		}		
 	
+		return scoreIA - scoreOpp;	
 	
 	}
 	

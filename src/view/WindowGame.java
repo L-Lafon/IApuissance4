@@ -69,7 +69,7 @@ public class WindowGame extends Scene  {
 	    resetMenuItem.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override public void handle(ActionEvent e) {
 	            System.out.println("reset");
-	            app.initGame();
+	            app.resetGame();
 	        }
 	    });
 	    histoMenuItem.setOnAction(new EventHandler<ActionEvent>() {
@@ -78,6 +78,7 @@ public class WindowGame extends Scene  {
 	            
 	        }
 	    });
+	    
 	    exitMenuItem.setOnAction(actionEvent -> Platform.exit());
 	    
 	    fileMenu.getItems().addAll(resetMenuItem, histoMenuItem, new SeparatorMenuItem(), exitMenuItem);
